@@ -10,7 +10,7 @@
         body {
             margin: 0;
             background: #e5e5e5;
-            font-family: 'Lato', Arial, HAelvetica, sans-serif;
+            font-family: 'Lato', Arial, Helvetica, sans-serif;
             color: #333;
         }
 
@@ -48,7 +48,13 @@
         }
 
         .substep {
-            margin: 7px 0 0 0;
+            margin: 7px 0 0 20px;
+            text-align: justify;
+        }
+
+        .substep::before {
+            content: "○";
+            margin-right: 8px;
         }
 
         .enzyme-list {
@@ -90,7 +96,7 @@
 
         .references p {
             margin: 8px 0;
-            text-align: left;
+            text-align: justify;
         }
 
         .references a {
