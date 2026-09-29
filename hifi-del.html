@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preparation of a Deletion Mutant — HiFi NEBuilder — Pombe Lab</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: #e5e5e5;
+            font-family: 'Lato', Arial, HAelvetica, sans-serif;
+            color: #333;
+        }
+
+        p {
+            text-align: justify;
+            line-height: 1.6;
+        }
+
+        .page {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 50px 30px;
+        }
+
+        h1 {
+            font-family: Georgia, serif;
+            text-align: center;
+            font-size: 42px;
+            margin: 0 0 45px;
+            line-height: 1.2;
+        }
+
+        .step {
+            display: grid;
+            grid-template-columns: 32px 1fr;
+            gap: 8px;
+            margin-bottom: 18px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .step-number {
+            color: #52705d;
+            font-weight: bold;
+        }
+
+        .substep {
+            margin: 7px 0 0 0;
+        }
+
+        .enzyme-list {
+            margin: 8px 0 0 0;
+            padding-left: 20px;
+        }
+
+        .enzyme-list li {
+            margin-bottom: 4px;
+        }
+
+        .figure {
+            margin: 28px auto 32px;
+            text-align: center;
+        }
+
+        .figure img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto;
+        }
+
+        .references {
+            margin-top: 40px;
+            padding: 20px 24px;
+            background: #eeeeee;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .references h2 {
+            font-family: Georgia, serif;
+            font-size: 23px;
+            margin: 0 0 15px;
+            color: #52705d;
+        }
+
+        .references p {
+            margin: 8px 0;
+            text-align: left;
+        }
+
+        .references a {
+            color: #52705d;
+        }
+
+        .back {
+            display: block;
+            margin-top: 35px;
+            text-align: center;
+            color: #52705d;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 700px) {
+            .page {
+                padding: 35px 20px;
+            }
+
+            h1 {
+                font-size: 32px;
+                margin-bottom: 35px;
+            }
+
+            .step {
+                grid-template-columns: 27px 1fr;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<main class="page">
+
+    <h1>PREPARATION OF A DELETION MUTANT — HIFI NEBUILDER</h1>
+
+    <div class="step">
+        <div class="step-number">1.</div>
+        <div>
+            Retrieve the gene sequence from the PomBase database and import it into SnapGene.
+            <div class="substep">Add approximately ±1000 bp of flanking sequence so that the surrounding genomic region is visible.</div>
+            <div class="substep">Annotate the gene, including the ORF and UTRs, in the sequence.</div>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">2.</div>
+        <div>
+            Inspect the gene in its genomic context to determine whether it overlaps with any other genes.
+            <div class="substep">Annotate any overlapping genes in SnapGene.</div>
+            <div class="substep">Modify the deletion design as appropriate if an overlap is identified.</div>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">3.</div>
+        <div>
+            Select the appropriate plasmid.
+            <div class="substep">Consider the experiments planned for the deletion mutant in advance when choosing the plasmid.</div>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">4.</div>
+        <div>
+            Select suitable restriction endonucleases. Examples:
+            <ul class="enzyme-list">
+                <li><strong>pHyg</strong> → HindIII, SmaI, BglII, BamHI</li>
+                <li><strong>pKan</strong> → BglII, SmaI, BamHI</li>
+                <li><strong>pNAT</strong> → HindIII, BglII, BamHI</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">5.</div>
+        <div>Proceed with the construct design in NEBuilder.</div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">6.</div>
+        <div>
+            <strong>Fragment 1: plasmid sequence.</strong> Process the plasmid sequence as a circular vector, name the fragment, and select the restriction endonucleases required to generate the linearized fragment.
+            <div class="substep">Alternatively, the vector can be prepared by inverse PCR.</div>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">7.</div>
+        <div>
+            <strong>Fragment 2: upstream (UP) homologous sequence.</strong> Select the appropriate upstream homologous region, process the sequence, and generate its complement.
+        </div>
+    </div>
+
+    <div class="figure">
+        <img src="/protocols/del1.png" alt="Selection of the upstream homologous sequence">
+    </div>
+
+    <div class="step">
+        <div class="step-number">8.</div>
+        <div>
+            <strong>Fragment 3: downstream (DOWN) homologous sequence.</strong> Process the sequence and generate its complement.
+        </div>
+    </div>
+
+    <div class="figure">
+        <img src="/protocols/del2.png" alt="Selection of the downstream homologous sequence">
+    </div>
+
+    <div class="step">
+        <div class="step-number">9.</div>
+        <div>
+            Edit one of the UP/DOWN fragments and introduce a linearization site between them.
+            <div class="substep"><strong>Important:</strong> The endonuclease recognition sequence used for linearization of the final plasmid must be unique.</div>
+            <div class="substep">Examples include ApaI (GGGCCC) or XbaI (TCTAGA).</div>
+        </div>
+    </div>
+
+    <div class="figure">
+        <img src="/protocols/del3.png" alt="Introduction of a unique linearization site">
+    </div>
+
+    <div class="step">
+        <div class="step-number">10.</div>
+        <div>Run the assembly reaction in SnapGene.</div>
+    </div>
+
+    <div class="figure">
+        <img src="/protocols/del4.png" alt="Final deletion construct and homologous recombination scheme">
+    </div>
+
+    <div class="references">
+        <h2>REFERENCES &amp; TOOLS</h2>
+        <p>
+            <a href="https://www.neb.com/ja-jp/applications/cloning-and-synthetic-biology/dna-assembly-and-cloning/nebuilder-hifi-dna-assembly" target="_blank" rel="noopener noreferrer">
+                NEBuilder HiFi DNA Assembly — New England Biolabs
+            </a>
+        </p>
+        <p>
+            <a href="https://nebuilder.neb.com/#!/" target="_blank" rel="noopener noreferrer">
+                NEBuilder Assembly Tool
+            </a>
+        </p>
+    </div>
+
+    <a class="back" href="protocols.html">
+        ← Back to protocols
+    </a>
+
+</main>
+
+</body>
+</html>
