@@ -61,12 +61,13 @@
     }
 
     .photo-wrap {
+        position: relative;
         width: 150px;
         height: 150px;
         margin: 0 auto 10px;
-        overflow: hidden;
-        background: #eeeeee;
-        border-radius: 2px;
+        overflow: visible;
+        background: transparent;
+        border-radius: 14px;
     }
 
     .photo-wrap img {
@@ -74,6 +75,7 @@
         height: 100%;
         display: block;
         object-fit: cover;
+        border-radius: 14px;
     }
 
     .photo-placeholder {
@@ -89,6 +91,7 @@
         line-height: 1.4;
         text-align: center;
         background: #eeeeee;
+        border-radius: 14px;
     }
 
     .member-name {
@@ -265,7 +268,7 @@
         margin-top: -28px;
         padding: 0 30px 30px;
         background: #eef3f1;
-        border-radius: 0 0 16px 16px;
+        border-radius: 16px;
     }
 
     .people-text-section {
@@ -289,7 +292,36 @@
     }
 
     .event-photo {
-        border-radius: 8px;
+        border-radius: 14px;
+    }
+
+    .sparkle-frame {
+        position: relative;
+        display: inline-block;
+        max-width: 100%;
+        line-height: 0;
+    }
+
+    .sparkle {
+        position: absolute;
+        z-index: 5;
+        pointer-events: none;
+        color: #78aa8a;
+        font-family: Georgia, serif;
+        line-height: 1;
+        text-shadow: 0 0 5px rgba(207, 229, 212, 0.85);
+        animation: photo-sparkle-float 1600ms ease-out forwards;
+    }
+
+    @keyframes photo-sparkle-float {
+        0% { opacity: 0; transform: translate(-50%, -50%) scale(0.45) rotate(0deg); }
+        22% { opacity: 0.85; }
+        65% { opacity: 0.7; }
+        100% { opacity: 0; transform: translate(-50%, -70%) scale(1) rotate(35deg); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .sparkle { animation: none; opacity: 0; }
     }
 
     @media (max-width: 700px) {
@@ -477,5 +509,40 @@ h1 {
     <a class="back" href="index.html">← Back to home</a>
 
 </main>
+
+<script>
+    // Small, original-size sparkles appear only while hovering over photos.
+    document.querySelectorAll('.event-photo').forEach(function (img) {
+        const frame = document.createElement('span');
+        frame.className = 'sparkle-frame';
+        img.parentNode.insertBefore(frame, img);
+        frame.appendChild(img);
+    });
+
+    document.querySelectorAll('.photo-wrap, .sparkle-frame').forEach(function (frame) {
+        frame.addEventListener('mouseenter', function () {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+            for (let i = 0; i < 8; i++) {
+                const sparkle = document.createElement('span');
+                sparkle.className = 'sparkle';
+                sparkle.textContent = Math.random() > 0.5 ? '✦' : '✧';
+                sparkle.style.fontSize = (5 + Math.random() * 10) + 'px';
+
+                // Place sparkles just outside the photo edges.
+                const positions = [
+                    [-4, 18], [104, 22], [-5, 72], [105, 78],
+                    [22, -5], [76, -4], [25, 105], [80, 105]
+                ];
+                const pos = positions[i];
+                sparkle.style.left = pos[0] + '%';
+                sparkle.style.top = pos[1] + '%';
+                sparkle.style.animationDelay = (Math.random() * 250) + 'ms';
+                frame.appendChild(sparkle);
+                sparkle.addEventListener('animationend', function () { sparkle.remove(); });
+            }
+        });
+    });
+</script>
 </body>
 </html>
