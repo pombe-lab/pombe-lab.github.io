@@ -7,241 +7,300 @@
     <title>Publications | Pombe Lab</title>
 
     <style>
+        * { box-sizing: border-box; }
 
-        * {
-            box-sizing: border-box;
+        :root {
+            --page-bg: #e5e5e5;
+            --green-dark: #355b48;
+            --green-mid: #789581;
+            --green-line: #a5cdb1;
+            --green-link: #dcebe0;
+            --green-link-hover: #c9e0d0;
+            --border: #dce5dd;
+            --ink: #343a35;
+            --muted: #68736b;
         }
 
         body {
             margin: 0;
-            background: #e5e5e5;
-            font-family: Arial, Helvetica, sans-serif;
-            color: #000000;
+            background: var(--page-bg);
+            font-family: Lato, Arial, sans-serif;
+            color: var(--ink);
         }
 
         .page {
             max-width: 1100px;
-            margin: 40px auto;
-            padding: 30px;
+            margin: 0 auto;
+            padding: 34px 34px 60px;
         }
 
-
-        /* ---------- HEADER ---------- */
+        /* Header matched to the upgraded site pages */
+        .page-eyebrow {
+            margin: 0 0 10px;
+            text-align: center;
+            color: var(--green-mid);
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 2.2px;
+            text-transform: uppercase;
+        }
 
         h1 {
-            font-family: Georgia, serif;
-            font-size: 64px;
+            margin: 0;
             text-align: center;
-            margin: 20px 0 60px 0;
-            letter-spacing: 2px;
+            font-family: Georgia, serif;
+            font-size: 44px;
+            font-weight: bold;
+            color: var(--green-dark);
+            letter-spacing: 0.5px;
         }
 
+        .heading-rule {
+            width: 64px;
+            height: 2px;
+            margin: 18px auto 0;
+            border: 0;
+            border-radius: 2px;
+            background: var(--green-line);
+        }
 
-        /* ---------- SECTION HEADERS ---------- */
+        .page-intro {
+            margin: 14px auto 38px;
+            text-align: center;
+            color: #526357;
+            font-family: Georgia, serif;
+            font-size: 15px;
+            line-height: 1.65;
+        }
+
+        /* Rounded panels matching the other upgraded pages */
+        .content-section {
+            padding: 28px 30px 30px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow: 0 3px 12px rgba(40, 65, 48, 0.045);
+        }
+
+        .content-section + .content-section { margin-top: 26px; }
 
         .section-title {
+            margin: 0 0 24px;
+            padding: 0 0 14px;
+            border-bottom: 1px solid #dce5dd;
+            color: var(--green-dark);
             font-family: Georgia, serif;
-            font-size: 30px;
-            text-align: center;
-
-            margin: 50px 0 30px 0;
-            padding-bottom: 12px;
-
-            border-bottom: 2px solid #999999;
+            font-size: 27px;
+            font-weight: normal;
+            line-height: 1.3;
         }
 
-
-        /* ---------- PUBLICATIONS ---------- */
+        /* Publications */
+        #all-publications {
+            max-height: 560px;
+            overflow-y: auto;
+            padding: 2px 12px 8px 2px;
+            scrollbar-color: #b8d2bf #f2f5f1;
+            scrollbar-width: thin;
+        }
 
         .publication {
-            margin-bottom: 30px;
+            margin-bottom: 22px;
+            padding: 0 0 2px;
         }
 
-        #all-publications {
-           max-height: 900px;
-           overflow-y: auto;
-           padding: 5px 15px 10px 5px;
-        }
+        .publication:last-child { margin-bottom: 0; }
 
         .publication-button {
+            position: relative;
             display: block;
             width: 100%;
-
-            background: #B8D8C0;
-            color: black;
-
-            text-decoration: none;
-            font-size: 20px;
-            font-weight: bold;
-
-            padding: 18px 25px;
+            padding: 15px 19px;
+            overflow: hidden;
+            border: 1px solid #d1e3d6;
             border-radius: 12px;
-
-            box-shadow: 0 4px 7px rgba(0,0,0,0.20);
-
-            transition:
-                transform 0.25s ease,
-                background 0.25s ease,
-                box-shadow 0.25s ease;
+            background: var(--green-link);
+            color: #294c3b;
+            text-decoration: none;
+            font-family: Lato, Arial, sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            line-height: 1.45;
+            box-shadow: 0 2px 5px rgba(40, 65, 48, 0.045);
+            transition: transform 220ms ease, background 220ms ease, box-shadow 220ms ease;
+            isolation: isolate;
         }
 
-        .publication-button:hover {
-            background: #8FBEA1;
-            transform: translateY(-3px);
-            box-shadow: 0 7px 11px rgba(0,0,0,0.22);
+        .publication-button:hover,
+        .publication-button:focus-visible {
+            background: var(--green-link-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 9px rgba(40, 65, 48, 0.09);
+            outline: none;
+        }
+
+        /* Tiny, low-opacity glints appear only while hovering a title link */
+        .publication-button::before,
+        .publication-button::after {
+            content: "✦";
+            position: absolute;
+            z-index: -1;
+            color: #fff;
+            opacity: 0;
+            pointer-events: none;
+            font-size: 13px;
+            transition: opacity 260ms ease, transform 360ms ease;
+        }
+
+        .publication-button::before {
+            top: 7px;
+            right: 17px;
+            transform: scale(.65) rotate(-18deg);
+        }
+
+        .publication-button::after {
+            right: 39px;
+            bottom: 5px;
+            font-size: 9px;
+            transform: scale(.7) rotate(15deg);
+        }
+
+        .publication-button:hover::before,
+        .publication-button:hover::after,
+        .publication-button:focus-visible::before,
+        .publication-button:focus-visible::after {
+            opacity: .65;
+            transform: scale(1) rotate(0);
         }
 
         .authors {
-            margin: 10px 10px 0 10px;
-            font-size: 15px;
-            line-height: 1.5;
+            margin: 9px 10px 0;
+            color: #4e5750;
+            font-size: 14px;
+            line-height: 1.6;
         }
 
         .journal {
-            margin: 4px 10px 0 10px;
+            margin: 4px 10px 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        /* Collapsible member lists */
+        .member {
+            margin-bottom: 14px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #fff;
+        }
+
+        .member:last-child { margin-bottom: 0; }
+
+        .member summary {
+            position: relative;
+            cursor: pointer;
+            list-style: none;
+            padding: 15px 20px;
+            font-family: Georgia, serif;
+            font-size: 19px;
+            font-weight: bold;
+            line-height: 1.4;
+            transition: background 200ms ease, color 200ms ease;
+        }
+
+        .member summary::-webkit-details-marker { display: none; }
+
+        .member summary::after {
+            content: "+";
+            float: right;
+            margin-left: 12px;
+            color: #567763;
+            font-family: Arial, sans-serif;
+            font-size: 21px;
+            font-weight: normal;
+        }
+
+        .member[open] summary::after { content: "−"; }
+
+        .main-member summary {
+            background: #d8e7db;
+            color: #315442;
+        }
+
+        .main-member summary:hover { background: #cbded0; }
+
+        .subsection-member summary {
+            background: #52745f;
+            color: #ffffff;
+        }
+
+        .subsection-member summary:hover { background: #456451; }
+
+        .member-publications { padding: 22px 18px 18px; }
+        .member-publications .publication { margin-bottom: 20px; }
+
+        .no-publications {
+            margin: 4px 8px 8px;
+            color: #68736b;
             font-size: 14px;
             font-style: italic;
         }
 
-
-        /* ---------- MEMBER SECTIONS ---------- */
-
-        .member {
-            margin-bottom: 18px;
-        }
-
-        .member summary {
-            cursor: pointer;
-
-            list-style: none;
-
-            padding: 16px 22px;
-
-            border-radius: 12px;
-
-            font-family: Georgia, serif;
-            font-size: 21px;
-            font-weight: bold;
-
-            box-shadow: 0 3px 6px rgba(0,0,0,0.18);
-
-            transition:
-                transform 0.2s ease,
-                box-shadow 0.2s ease;
-        }
-
-        /* Hide default triangle */
-
-        .member summary::-webkit-details-marker {
-            display: none;
-        }
-
-        .member summary::after {
-            content: "＋";
-            float: right;
-            font-family: Arial, sans-serif;
-            font-size: 20px;
-        }
-    
-        .member[open] summary::after {
-            content: "−";
-        }
-
-        .member summary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 10px rgba(0,0,0,0.20);
-        }
-
-
-        /* Main Pombe Lab members */
-
-        .main-member summary {
-            background: #C9B8D9;
-            color: #000000;
-        }
-
-        .main-member summary:hover {
-            background: #B29BC7;
-        }
-
-
-/* Lab subsection members */
-
-        .subsection-member summary {
-           background: #638A96;
-            color: white;
-        }
-
-        .subsection-member summary:hover {
-            background: #527783;
-        }
-
-
-        /* Publications inside member sections */
-
-        .member-publications {
-            padding: 20px 10px 5px 10px;
-        }
-
-
-        /* No publications message */
-
-        .no-publications {
-            margin: 5px 10px 15px 10px;
-            font-style: italic;
-            color: #555555;
-        }
-
-
-        /* ---------- BACK BUTTON ---------- */
-
         .back {
             display: block;
             text-align: center;
-            margin-top: 35px;
+            margin-top: 34px;
             color: #52705d;
             text-decoration: none;
-            font-size: 16px;
+            font-size: 15px;
         }
 
-        .back:hover {
-            text-decoration: underline;
+        .back:hover { text-decoration: underline; }
+
+        /* Gentle entrance, consistent with the other upgraded pages */
+        @keyframes publications-fade-up {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
+        .page-eyebrow, h1, .heading-rule, .page-intro {
+            animation: publications-fade-up 750ms ease-out both;
+        }
 
-        /* ---------- MOBILE ---------- */
+        .content-section {
+            animation: publications-fade-up 750ms ease-out both;
+        }
+
+        .content-section:nth-of-type(1) { animation-delay: 140ms; }
+        .content-section:nth-of-type(2) { animation-delay: 260ms; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .page-eyebrow, h1, .heading-rule, .page-intro, .content-section {
+                animation: none;
+                opacity: 1;
+                transform: none;
+            }
+            .publication-button,
+            .publication-button::before,
+            .publication-button::after,
+            .member summary { transition: none; }
+        }
 
         @media (max-width: 700px) {
-
-            .page {
-                margin: 10px;
-                padding: 15px;
-            }
-
-            h1 {
-                font-size: 45px;
-                margin-bottom: 40px;
-            }
-
-            .section-title {
-                font-size: 25px;
-            }
-
-            .publication-button {
-                font-size: 17px;
-                padding: 16px 18px;
-            }
-
-            .authors {
-                font-size: 14px;
-            }
-
-            .member summary {
-                font-size: 18px;
-                padding: 15px 18px;
-            }
+            .page { padding: 36px 20px 45px; }
+            h1 { font-size: 34px; }
+            .page-intro { font-size: 15px; margin-bottom: 30px; }
+            .content-section { padding: 22px 18px 24px; border-radius: 15px; }
+            .section-title { font-size: 24px; margin-bottom: 20px; }
+            .publication-button { font-size: 16px; padding: 14px 16px; }
+            .authors { font-size: 13px; }
+            .journal { font-size: 12px; }
+            .member summary { font-size: 17px; padding: 14px 16px; }
+            #all-publications { max-height: 560px; }
         }
-
     </style>
 </head>
 
@@ -250,30 +309,36 @@
 
 <main class="page">
 
-    <h1>PUBLICATIONS</h1>
+    <p class="page-eyebrow">The science we contribute to</p>
+    <h1>Publications</h1>
+    <hr class="heading-rule">
+    <p class="page-intro">Discover the research and collaborations behind our work.</p>
 
-
+    <section class="content-section" aria-labelledby="all-publications-heading">
     <!-- ================================================= -->
     <!-- ALL PUBLICATIONS -->
     <!-- ================================================= -->
 
-    <h2 class="section-title">
+    <h2 class="section-title" id="all-publications-heading">
         All publications
     </h2>
 
     <div id="all-publications"></div>
 
 
+    </section>
+
+    <section class="content-section" aria-labelledby="members-heading">
     <!-- ================================================= -->
     <!-- PUBLICATIONS BY MEMBER -->
     <!-- ================================================= -->
 
-    <h2 class="section-title">
+    <h2 class="section-title" id="members-heading">
         By lab member
     </h2>
 
     <div id="members"></div>
-
+    </section>
 
     <a class="back" href="index.html">
         ← Back to home
