@@ -247,6 +247,63 @@
             max-height: 260px;
         }
     }
+
+    /* ---------- ROUNDED CONTENT SECTIONS ---------- */
+    .section-card {
+        background: #eef3f1;
+        border-radius: 16px;
+        padding: 28px 30px 32px;
+        margin: 0 0 28px;
+        box-sizing: border-box;
+    }
+
+    .section-card h2 {
+        margin-top: 0;
+    }
+
+    .team-continuation {
+        margin-top: -28px;
+        padding: 0 30px 30px;
+        background: #eef3f1;
+        border-radius: 0 0 16px 16px;
+    }
+
+    .people-text-section {
+        margin-top: 0;
+    }
+
+    .meeting {
+        margin-top: 0;
+    }
+
+    .event {
+        margin-top: 30px;
+    }
+
+    .event:first-child {
+        margin-top: 0;
+    }
+
+    .event-photos {
+        justify-content: center;
+    }
+
+    .event-photo {
+        border-radius: 8px;
+    }
+
+    @media (max-width: 700px) {
+        .section-card {
+            padding: 24px 16px 26px;
+            border-radius: 14px;
+        }
+
+        .team-continuation {
+            margin-top: -28px;
+            padding: 0 16px 26px;
+        }
+    }
+
 /* ---------- SMOOTH ENTRANCE ---------- */
 
 @keyframes gentle-fade-up {
@@ -264,13 +321,17 @@ h1 {
     animation: gentle-fade-up 800ms ease-out both;
 }
 
-main {
+.section-card {
     animation: gentle-fade-up 800ms ease-out both;
 }
 
+.section-card:nth-of-type(2) { animation-delay: 100ms; }
+.section-card:nth-of-type(3) { animation-delay: 200ms; }
+.section-card:nth-of-type(4) { animation-delay: 300ms; }
+
 @media (prefers-reduced-motion: reduce) {
     h1,
-    main {
+    .section-card {
         animation: none;
         opacity: 1;
         transform: none;
@@ -285,7 +346,7 @@ main {
     <h1>LAB MEMBERS</h1>
 
     <!-- ================= GROUP LEADER / RESEARCHERS ================= -->
-    <section>
+    <section class="section-card">
         <h2>Our Team</h2>
 
         <div class="members-grid">
@@ -329,7 +390,7 @@ main {
         </div>
     </section>
 
-    <section>
+    <section class="team-continuation">
 
         <div class="members-grid phd-grid">
 
@@ -364,7 +425,7 @@ main {
     </section>
 
     <!-- ================= MASTER STUDENTS ================= -->
-    <section class="people-text-section">
+    <section class="section-card people-text-section">
         <h2>Master students</h2>
         <div class="people-list">
             <div>Bc. Hana Kernová</div>
@@ -375,7 +436,7 @@ main {
     </section>
 
     <!-- ================= FORMER MEMBERS ================= -->
-    <section class="people-text-section">
+    <section class="section-card people-text-section">
         <h2>Former members</h2>
         <div class="people-list">
             <div>Mgr. Ivana Míšová, PhD.</div>
@@ -385,7 +446,7 @@ main {
     </section>
 
     <!-- ================= EVENTS ================= -->
-    <section class="meeting">
+    <section class="section-card meeting">
 
         <!-- Newest -->
         <div class="event">
