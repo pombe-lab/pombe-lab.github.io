@@ -93,6 +93,35 @@
         display: none;
     }
 
+    #meme-gallery {
+        display: none;
+        margin: 18px auto 0;
+        max-width: 420px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+        gap: 10px;
+        justify-items: center;
+        align-items: center;
+    }
+
+    #meme-gallery[hidden] {
+        display: none;
+    }
+
+    .meme-image {
+        display: block;
+        width: 100%;
+        max-width: 125px;
+        height: auto;
+        border-radius: 6px;
+        animation: meme-appear 250ms ease-out both;
+    }
+
+    @keyframes meme-appear {
+        from { opacity: 0; transform: scale(0.75) rotate(-4deg); }
+        to { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+
     .back {
         display: block;
         text-align: center;
@@ -104,6 +133,18 @@
 
     .back:hover {
         text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+        .page { padding: 32px 16px; }
+        .login-box { padding: 28px 22px; margin-top: 42px; }
+        h1 { font-size: 36px; }
+        #meme-gallery { grid-template-columns: repeat(auto-fit, minmax(76px, 1fr)); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .meme-image { animation: none; }
+        button { transition: none; }
     }
 </style>
 </head>
@@ -140,9 +181,11 @@
 
         </form>
 
-        <p id="error">
+        <p id="error" role="alert">
             Incorrect password. Please try again.
         </p>
+
+        <div id="meme-gallery" hidden aria-label="Judging guy gallery"></div>
 
     </div>
 
@@ -153,26 +196,35 @@
 </div>
 
 <script>
+let failedAttempts = 0;
 
 function checkPassword(event) {
-
     event.preventDefault();
 
-    const password = document.getElementById("password").value;
+    const passwordInput = document.getElementById("password");
+    const password = passwordInput.value;
+    const error = document.getElementById("error");
+    const gallery = document.getElementById("meme-gallery");
 
     if (password === "calc2026") {
-
         sessionStorage.setItem("calculationsAccess", "granted");
-
         window.location.href = "calculations.html";
-
-    } else {
-
-        document.getElementById("error").style.display = "block";
-
+        return;
     }
-}
 
+    failedAttempts += 1;
+    error.style.display = "block";
+
+    // Add one copy for each failed attempt. The count resets on page refresh.
+    const meme = document.createElement("img");
+    meme.src = "pombe-lab-password-meme.gif";
+    meme.alt = "A judgmental look after an incorrect password";
+    meme.className = "meme-image";
+    gallery.appendChild(meme);
+    gallery.hidden = false;
+
+    passwordInput.select();
+}
 </script>
 
 </body>
