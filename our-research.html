@@ -8,82 +8,116 @@
 <title>Our Research – Pombe Lab</title>
 
 <style>
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
     background: #ffffff;
-    font-family: Lato, sans-serif;
+    font-family: Lato, Arial, sans-serif;
     color: #333;
 }
 
-p {
-    text-align: justify;
-    line-height: 1.6;
-}
+p { text-align: justify; line-height: 1.7; }
 
 .page {
-    max-width: 850px;
+    max-width: 1000px;
     margin: 0 auto;
-    padding: 50px 30px;
+    padding: 48px 34px 60px;
 }
 
-
-/* =========================
-   MAIN TITLE
-   ========================= */
+/* Page heading — matched to the Lab Members page */
+.page-eyebrow {
+    margin: 0 0 10px;
+    text-align: center;
+    color: #789581;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 2.2px;
+    text-transform: uppercase;
+}
 
 h1 {
-    font-family: Georgia, serif;
+    margin: 0;
     text-align: center;
-    font-size: 42px;
-    margin-bottom: 15px;
+    font-family: Georgia, serif;
+    font-size: 44px;
+    font-weight: bold;
+    color: #355b48;
+    letter-spacing: 0.5px;
 }
 
+.heading-rule {
+    width: 64px;
+    height: 2px;
+    margin: 18px auto 0;
+    border: 0;
+    border-radius: 2px;
+    background: #a5cdb1;
+}
 
-/* =========================
-   RESEARCH SECTIONS
-   ========================= */
+.page-intro {
+    max-width: none;
+    margin: 14px auto 38px;
+    text-align: center;
+    color: #526357;
+    font-family: Georgia, serif;
+    font-size: 15px;
+    line-height: 1.65;
+}
 
-.research-section {
-    margin-top: 55px;
+/* Research themes */
+.research-section { margin-top: 0; }
+.research-section + .research-section {
+    margin-top: 62px;
+    padding-top: 42px;
+    border-top: 1px solid #dce6de;
 }
 
 .section-heading {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
     font-family: Georgia, serif;
-    font-size: 25px;
-    margin-top: 35px;
-    margin-bottom: 25px;
-    color: #52705d;
+    font-size: 27px;
+    font-weight: normal;
+    line-height: 1.3;
+    margin: 0 0 26px;
+    color: #355b48;
 }
 
+.section-number {
+    flex: 0 0 auto;
+    color: #8caf98;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
 
-/* =========================
-   TEXT + SCHEME
-   ========================= */
-
+/* Text + main scheme */
 .section-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 45px;
+    grid-template-columns: 1.08fr .92fr;
+    gap: 42px;
     align-items: center;
 }
 
 .section-text {
-    font-size: 17px;
-    line-height: 1.7;
+    font-size: 16px;
+    line-height: 1.75;
 }
 
-.section-text p {
-    margin-bottom: 18px;
-}
-
-
-/* =========================
-   SCHEMES
-   ========================= */
+.section-text p { margin: 0 0 17px; }
+.section-text p:last-child { margin-bottom: 0; }
 
 .scheme {
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: #f6f8f5;
+    border: 1px solid #e1e9e2;
+    border-radius: 14px;
 }
 
 .scheme img {
@@ -93,29 +127,23 @@ h1 {
     margin: 0 auto;
 }
 
-.repair-scheme {
-    max-width: 390px;
-}
+.repair-scheme, .meiosis-scheme { max-width: 390px; }
 
-.meiosis-scheme {
-    max-width: 390px;
-}
-
-
-/* =========================
-   EXPERIMENTAL FIGURES
-   ========================= */
-
+/* Experimental figures */
 .practice-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 28px;
-    align-items: start;
-    margin-top: 40px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    align-items: stretch;
+    margin-top: 34px;
 }
 
 .figure-card {
     min-width: 0;
+    padding: 16px 14px 17px;
+    background: #f7f8f6;
+    border: 1px solid #e4e9e3;
+    border-radius: 13px;
 }
 
 .figure-card img {
@@ -127,68 +155,83 @@ h1 {
 }
 
 .figure-card p {
-    font-size: 14px;
-    line-height: 1.55;
-    color: #444;
-    margin-top: 12px;
-    text-align: justify;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #4b514c;
+    margin: 14px 0 0;
+    text-align: left;
 }
 
+.rad51-figure { object-fit: contain !important; }
 
-/* =========================
-   RAD51 FIGURE
-   ========================= */
-
-.rad51-figure {
-    object-fit: contain !important;
-}
-
-
-/* =========================
-   BACK LINK
-   ========================= */
-
+/* Back link */
 .back {
     display: block;
     text-align: center;
-    margin-top: 35px;
+    margin-top: 54px;
     color: #52705d;
     text-decoration: none;
-    font-size: 16px;
+    font-size: 15px;
+}
+.back:hover { text-decoration: underline; }
+
+/* Gentle entrance: title first, then each research theme */
+@keyframes research-fade-up {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.back:hover {
-    text-decoration: underline;
+h1, .page-eyebrow, .heading-rule, .page-intro {
+    animation: research-fade-up 800ms ease-out both;
 }
 
-
-/* =========================
-   MOBILE
-   ========================= */
-
-@media (max-width: 700px) {
-
-    .page {
-        padding: 40px 20px;
-    }
-
-    .section-grid {
-        grid-template-columns: 1fr;
-        gap: 25px;
-    }
-
-    .practice-grid {
-        grid-template-columns: 1fr;
-        gap: 35px;
-    }
-
-    .figure-card img {
-        height: auto;
-        max-height: 260px;
-    }
-
+.research-section {
+    animation: research-fade-up 800ms ease-out both;
 }
 
+.research-section:nth-of-type(1) { animation-delay: 140ms; }
+.research-section:nth-of-type(2) { animation-delay: 320ms; }
+
+@media (prefers-reduced-motion: reduce) {
+    h1, .page-eyebrow, .heading-rule, .page-intro, .research-section {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Responsive layout */
+@media (max-width: 760px) {
+    .page { padding: 36px 22px 45px; }
+    h1 { font-size: 34px; }
+    .page-intro { font-size: 15px; margin-bottom: 30px; }
+    .section-heading { font-size: 24px; }
+    .section-grid { grid-template-columns: 1fr; gap: 24px; }
+    .scheme { padding: 18px; }
+    .practice-grid { grid-template-columns: 1fr; gap: 16px; }
+    .figure-card {
+        display: grid;
+        grid-template-columns: minmax(110px, .8fr) 1.2fr;
+        gap: 16px;
+        align-items: center;
+    }
+    .figure-card img { height: auto; max-height: 190px; }
+    .figure-card p { margin: 0; }
+    .research-section + .research-section {
+        margin-top: 44px;
+        padding-top: 34px;
+    }
+}
+
+@media (max-width: 460px) {
+    .figure-card { grid-template-columns: 1fr; }
+    .figure-card img { max-height: 230px; }
+    .figure-card p { margin-top: 4px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * { scroll-behavior: auto !important; }
+}
 </style>
 </head>
 
@@ -202,7 +245,10 @@ h1 {
          TITLE
          ========================= -->
 
-    <h1>OUR RESEARCH</h1>
+    <p class="page-eyebrow">The science behind our work</p>
+    <h1>Our Research</h1>
+    <hr class="heading-rule">
+    <p class="page-intro">Exploring DNA repair, meiosis, and genome stability.</p>
 
 
     <!-- =====================================================
@@ -212,7 +258,8 @@ h1 {
     <section class="research-section">
 
         <h2 class="section-heading">
-            01 — DNA repair and chromatin remodelers
+            <span class="section-number">01</span>
+            <span>DNA repair and chromatin remodelers</span>
         </h2>
 
 
@@ -337,7 +384,8 @@ h1 {
     <section class="research-section">
 
         <h2 class="section-heading">
-            02 — Meiosis and karyogamy
+            <span class="section-number">02</span>
+            <span>Meiosis and karyogamy</span>
         </h2>
 
 
