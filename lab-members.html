@@ -247,6 +247,35 @@
             max-height: 260px;
         }
     }
+/* ---------- SMOOTH ENTRANCE ---------- */
+
+@keyframes gentle-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+h1 {
+    animation: gentle-fade-up 800ms ease-out both;
+}
+
+main {
+    animation: gentle-fade-up 800ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    h1,
+    main {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+}
 </style>
 </head>
 
