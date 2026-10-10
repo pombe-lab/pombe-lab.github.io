@@ -16,19 +16,48 @@
     .page {
         max-width: 950px;
         margin: 0 auto;
-        padding: 45px 30px 60px;
+        padding: 42px 30px 60px;
         background: #e5e5e5;
         min-height: 100vh;
         box-sizing: border-box;
     }
 
+    .page-eyebrow {
+        margin: 0 0 10px;
+        text-align: center;
+        color: #789581;
+        font-size: 11px;
+        font-weight: bold;
+        letter-spacing: 2.2px;
+        text-transform: uppercase;
+    }
+
     h1 {
-        margin: 0 0 45px;
+        margin: 0;
         text-align: center;
         font-family: Georgia, serif;
         font-size: 44px;
-        color: #52705d;
+        color: #355b48;
         letter-spacing: 0.5px;
+    }
+
+    .page-intro {
+        max-width: 560px;
+        margin: 14px auto 38px;
+        text-align: center;
+        color: #526357;
+        font-family: Georgia, serif;
+        font-size: 16px;
+        line-height: 1.65;
+    }
+
+    .heading-rule {
+        width: 64px;
+        height: 2px;
+        margin: 18px auto 0;
+        border: 0;
+        border-radius: 2px;
+        background: #a5cdb1;
     }
 
     h2 {
@@ -37,7 +66,7 @@
         font-family: Georgia, serif;
         font-size: 27px;
         font-weight: normal;
-        color: #52705d;
+        color: #355b48;
     }
 
     .members-grid {
@@ -76,6 +105,8 @@
         display: block;
         object-fit: cover;
         border-radius: 14px;
+        border: 1px solid rgba(53, 91, 72, 0.16);
+        box-sizing: border-box;
     }
 
     .photo-placeholder {
@@ -104,12 +135,13 @@
     }
 
     .member-name.purple {
-        background: #C9B8D9;
+        background: #dce9df;
+        color: #355b48;
     }
 
     .member-name.blue {
-        background: #638A96;
-        color: white;
+        background: #52705d;
+        color: #ffffff;
     }
 
     .role {
@@ -211,7 +243,11 @@
 
         h1 {
             font-size: 34px;
-            margin-bottom: 35px;
+        }
+
+        .page-intro {
+            font-size: 15px;
+            margin-bottom: 30px;
         }
 
         .members-grid {
@@ -253,11 +289,13 @@
 
     /* ---------- ROUNDED CONTENT SECTIONS ---------- */
     .section-card {
-        background: #eef3f1;
-        border-radius: 16px;
-        padding: 28px 30px 32px;
+        background: #f4f6f2;
+        border: 1px solid #d8e2da;
+        border-radius: 18px;
+        padding: 30px 30px 34px;
         margin: 0 0 28px;
         box-sizing: border-box;
+        box-shadow: 0 5px 16px rgba(53, 91, 72, 0.055);
     }
 
     .section-card h2 {
@@ -265,10 +303,13 @@
     }
 
     .team-continuation {
-        margin-top: -28px;
-        padding: 0 30px 30px;
-        background: #eef3f1;
-        border-radius: 16px;
+        margin-top: 0;
+        margin-bottom: 28px;
+        padding: 30px;
+        background: #f4f6f2;
+        border: 1px solid #d8e2da;
+        border-radius: 18px;
+        box-shadow: 0 5px 16px rgba(53, 91, 72, 0.055);
     }
 
     .people-text-section {
@@ -327,12 +368,14 @@
     @media (max-width: 700px) {
         .section-card {
             padding: 24px 16px 26px;
-            border-radius: 14px;
+            border-radius: 15px;
         }
 
         .team-continuation {
-            margin-top: -28px;
-            padding: 0 16px 26px;
+            margin-top: 0;
+            margin-bottom: 24px;
+            padding: 26px 16px;
+            border-radius: 15px;
         }
     }
 
@@ -375,7 +418,10 @@ h1 {
 <body>
 <main class="page">
 
-    <h1>LAB MEMBERS</h1>
+    <p class="page-eyebrow">The people behind the research</p>
+    <h1>Lab Members</h1>
+    <hr class="heading-rule">
+    <p class="page-intro">Meet the people behind our work on DNA repair, meiosis, and genome stability.</p>
 
     <!-- ================= GROUP LEADER / RESEARCHERS ================= -->
     <section class="section-card">
