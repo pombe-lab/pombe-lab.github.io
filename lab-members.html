@@ -42,12 +42,13 @@
     }
 
     .page-intro {
-        max-width: 560px;
+        max-width: none;
+        white-space: nowrap;
         margin: 14px auto 38px;
         text-align: center;
         color: #526357;
         font-family: Georgia, serif;
-        font-size: 16px;
+        font-size: 15px;
         line-height: 1.65;
     }
 
@@ -83,6 +84,7 @@
 
     .members-grid.phd-grid {
         padding-top: 34px;
+        margin-top: 0;
     }
 
     .member.single {
@@ -179,11 +181,17 @@
     }
 
     .event-title {
-        margin: 0 0 14px;
-        font-size: 16px;
-        line-height: 1.5;
-        color: #52705d;
-        text-align: left;
+        display: table;
+        max-width: 100%;
+        box-sizing: border-box;
+        margin: 0 auto 14px;
+        padding: 7px 13px;
+        border-radius: 7px;
+        background: #dce9df;
+        color: #355b48;
+        font-size: 15px;
+        line-height: 1.45;
+        text-align: center;
         font-family: Arial, Helvetica, sans-serif;
         font-weight: normal;
     }
@@ -248,6 +256,7 @@
         .page-intro {
             font-size: 15px;
             margin-bottom: 30px;
+            white-space: normal;
         }
 
         .members-grid {
@@ -371,12 +380,6 @@
             border-radius: 15px;
         }
 
-        .team-continuation {
-            margin-top: 0;
-            margin-bottom: 24px;
-            padding: 26px 16px;
-            border-radius: 15px;
-        }
     }
 
 /* ---------- SMOOTH ENTRANCE ---------- */
@@ -466,9 +469,6 @@ h1 {
             </div>
 
         </div>
-    </section>
-
-    <section class="team-continuation">
 
         <div class="members-grid phd-grid">
 
