@@ -113,6 +113,43 @@
             background: #CFE5D4;
         }
 
+        /* ---------- SMOOTH ENTRANCE ---------- */
+
+        @keyframes gentle-fade-up {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-text {
+            animation: gentle-fade-up 800ms ease-out both;
+        }
+
+        .navigation .nav-button {
+            opacity: 0;
+            animation: gentle-fade-up 650ms ease-out forwards;
+        }
+
+        .navigation .nav-button:nth-child(1) { animation-delay: 250ms; }
+        .navigation .nav-button:nth-child(2) { animation-delay: 400ms; }
+        .navigation .nav-button:nth-child(3) { animation-delay: 550ms; }
+        .navigation .nav-button:nth-child(4) { animation-delay: 700ms; }
+        .navigation .nav-button:nth-child(5) { animation-delay: 850ms; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .hero-text,
+            .navigation .nav-button {
+                animation: none;
+                opacity: 1;
+                transform: none;
+            }
+        }
+
         /* ---------- CLICK SPARKLES ---------- */
 
         .sparkle-layer {
@@ -125,8 +162,8 @@
 
         .sparkle {
             position: absolute;
-            width: var(--size, 10px);
-            height: var(--size, 10px);
+            width: var(--size, 20px);
+            height: var(--size, 20px);
             color: var(--sparkle-color, #8FBEA1);
             opacity: 0;
             transform: translate(-50%, -50%) scale(0.2) rotate(0deg);
