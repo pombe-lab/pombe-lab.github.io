@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Y2H Plasmid Assembly and Interaction Prescreening</title>
+<style>
+    body {
+        margin: 0;
+        background: #e5e5e5;
+        font-family: 'Lato', Arial, Helvetica, sans-serif;
+        color: #333;
+    }
+
+    .page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 55px 30px 60px;
+    }
+
+    h1 {
+        font-family: Georgia, serif;
+        text-align: center;
+        font-size: 42px;
+        margin: 0 0 12px;
+        color: #333;
+    }
+
+    .subtitle {
+        text-align: center;
+        font-family: Georgia, serif;
+        font-size: 24px;
+        color: #52705d;
+        margin-bottom: 45px;
+    }
+
+    h2 {
+        font-family: Georgia, serif;
+        font-size: 25px;
+        margin: 38px 0 18px;
+        color: #52705d;
+    }
+
+    h3 {
+        font-family: Georgia, serif;
+        font-size: 20px;
+        margin: 30px 0 15px;
+        color: #333;
+    }
+
+    p {
+        font-size: 13px;
+        line-height: 1.7;
+        text-align: justify;
+        margin: 0 0 14px;
+    }
+
+    ol {
+        margin: 0 0 20px 25px;
+        padding-left: 20px;
+    }
+
+    ol > li {
+        font-size: 13px;
+        line-height: 1.7;
+        margin-bottom: 9px;
+        padding-left: 5px;
+    }
+
+    ul {
+        margin: 7px 0 12px 0;
+        padding-left: 25px;
+        list-style-type: circle;
+    }
+
+    ul li {
+        font-size: 13px;
+        line-height: 1.7;
+        margin-bottom: 5px;
+    }
+
+    .principle {
+        background: #eeeeee;
+        border-radius: 12px;
+        padding: 18px 22px;
+        margin: 0 0 30px;
+        line-height: 1.6;
+    }
+
+    .principle p {
+        margin: 0 0 10px;
+    }
+
+    .principle p:last-child {
+        margin-bottom: 0;
+    }
+
+    .note {
+        background: #eeeeee;
+        border-radius: 12px;
+        padding: 18px 22px;
+        margin: 25px 0;
+        line-height: 1.6;
+    }
+
+    .note ul {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .solution-table {
+        width: auto;
+        max-width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0 30px;
+        background: white;
+        font-size: 13px;
+    }
+
+    .solution-table th,
+    .solution-table td {
+        border: 1px solid #ccc;
+        padding: 9px 11px;
+        text-align: left;
+        vertical-align: top;
+        line-height: 1.5;
+    }
+
+    .solution-table th {
+        background: #B8D8C0;
+        font-family: Georgia, serif;
+        font-weight: normal;
+    }
+
+    .media-table {
+        width: 100%;
+    }
+
+    .media-table th,
+    .media-table td {
+        padding: 8px 11px;
+        line-height: 1.4;
+    }
+
+    .media-table td br + br {
+        display: none;
+    }
+
+    .solution-table td:first-child {
+        white-space: nowrap;
+        width: 1%;
+    }
+
+    .back {
+        display: block;
+        text-align: center;
+        margin-top: 45px;
+        color: #52705d;
+        text-decoration: none;
+        font-size: 16px;
+    }
+
+    .back:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 700px) {
+        .page {
+            padding: 40px 20px 50px;
+        }
+
+        h1 {
+            font-size: 34px;
+        }
+
+        .subtitle {
+            font-size: 21px;
+        }
+
+        h2 {
+            font-size: 23px;
+        }
+
+        .solution-table {
+            font-size: 12px;
+        }
+    }
+</style>
+<style>
+/* Small additions for this protocol; the original Y2H styling is retained. */
+.page { max-width: 900px; }
+.two-column { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: start; }
+.recipe { background: #eeeeee; border-radius: 12px; padding: 18px 22px; margin: 0 0 18px; }
+.recipe h3 { margin: 0 0 10px; }
+.recipe p { margin-bottom: 6px; }
+.recipe p:last-child { margin-bottom: 0; }
+@media (max-width: 760px) { .two-column { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>Y2H Plasmid Assembly</h1>
+  <div class="subtitle">Interaction prescreening by yeast-based plasmid assembly</div>
+
+  <h2>Principle</h2>
+  <div class="principle">
+    <p>The yeast two-hybrid (Y2H) system is used to detect protein–protein interactions. The system is based on two separate domains of a transcription factor: the <strong>DNA-binding domain (BD)</strong> and the <strong>activation domain (AD)</strong>.</p>
+    <p>One protein of interest is fused to the BD, while the second protein is fused to the AD. If the two proteins interact, the BD and AD are brought together, allowing transcription of reporter genes and detection of the interaction.</p>
+  </div>
+
+  <h2>Purpose of This Protocol</h2>
+  <div class="principle">
+    <p>This protocol describes plasmid assembly in yeast, recovery of assembled plasmids, transformation into <em>E. coli</em> DH5α, and sequence verification. The verified plasmid is then transformed into the appropriate yeast strain for Y2H testing.</p>
+    <p><strong>The key advantage is that potential protein–protein interactions can be prescreened in advance</strong> by replica-plating the yeast transformants and comparing growth on selective media before proceeding with the spot test using sequence-verified plasmids.</p>
+  </div>
+
+  <div>
+      <h2>Preparation</h2>
+      <ol>
+        <li><strong>Prepare the vector.</strong> Set up the O/N restriction double digest:
+          <ul class="preparation-list">
+            <li>e.g. NdeI + BamHI for pAD; NdeI + SmaI for pBD</li>
+            <li>Check on an ELFO.</li>
+          </ul>
+        </li>
+        <li><strong>Prepare the insert by PCR.</strong>
+          <ul class="preparation-list">
+            <li>Check the PCR product on an ELFO.</li>
+            <li>Primer overlap: minimum 40 bp with the vector and minimum 20 bp with the insert.</li>
+          </ul>
+        </li>
+      </ol>
+
+      <h2>Plasmid Assembly</h2>
+      <ol>
+        <li>Inoculate 5 mL of an overnight culture of the strain to be transformed (e.g. carrying RAD51-BD) in SD-LW.</li>
+        <li>Refresh by adding 15 mL YPADU and grow for 2 h (maximum 3 h).</li>
+        <li>Centrifuge for 2 min at 3000 × g and remove the supernatant.</li>
+        <li>Wash with 1 mL dH<sub>2</sub>O.</li>
+        <li>Transfer to a 1.5 mL microtube, centrifuge, and remove the supernatant.</li>
+        <li>Resuspend in 0.5 mL dH<sub>2</sub>O.</li>
+        <li>Aliquot 0.1 mL per transformation (5 transformations).</li>
+        <li>Add 0.36 mL transformation mix to each aliquot. The mix contains:
+          <ul>
+            <li>240 µL 50% PEG</li>
+            <li>36 µL 1 M LiAc</li>
+            <li>50 µL carrier ssDNA</li>
+            <li>3 µL insert + 4 µL plasmid DNA in 43 µL dH<sub>2</sub>O</li>
+          </ul>
+        </li>
+        <li>Incubate for 40 min at 42 °C in a water bath.</li>
+        <li>Centrifuge for 5–10 s and remove the supernatant.</li>
+        <li>Gently resuspend in 0.1 mL dH<sub>2</sub>O and plate all at once on SD-LW. Grow for approximately 3 days.</li>
+      </ol>
+
+      <h2>DNA Extraction</h2>
+      <ol>
+        <li>Mix the transformants together on the plate using a toothpick.</li>
+        <li>Replica-plate a small amount on SD-LWH, SD-LWA, and SD-LWHA to screen for interactions in advance. Check after a couple of days (1–3 days).</li>
+        <li>In parallel, take the rest of the cells for plasmid DNA extraction.</li>
+        <li>Into a fresh 1.5 mL microtube, add:
+          <ul><li>0.2 mL glass beads</li><li>0.2 mL breaking buffer</li><li>All cells</li></ul>
+        </li>
+        <li>Add 0.25 mL phenol:chloroform:isoamyl alcohol (25:24:1).</li>
+        <li>Shake on a multibead shaker at 2700 rpm for 3 min.</li>
+        <li>Centrifuge at top speed for 10 min (approximately 15,000 rpm).</li>
+        <li>Transfer 50 µL of the supernatant into a new 1.5 mL microtube.</li>
+      </ol>
+
+      <h2>DH5α Transformation with Extracted DNA</h2>
+      <ol>
+        <li>Transform DH5α cells using 6 µL of the extracted DNA, following the established bacterial transformation procedure.</li>
+        <li>Plate on the appropriate selection medium.
+          <ul>
+            <li>Phenol:chloroform:isoamyl alcohol can inhibit or kill cells. If no colonies grow, try plating different amounts (e.g. 3 µL or 12 µL).</li>
+            <li>Expect few transformants and potentially slow growth.</li>
+          </ul>
+        </li>
+        <li>Perform a miniprep and sequence the plasmid. No pre-sequencing check is specified in the source notes.</li>
+      </ol>
+
+      <h2>Transformation of the Sequence-Verified Plasmid into the Correct Yeast Strain</h2>
+      <ol>
+        <li>Inoculate 5 mL of an overnight culture of the strain to be transformed in SD-LW.</li>
+        <li>Refresh by adding 15 mL YPADU and grow for 2 h (maximum 3 h).</li>
+        <li>Centrifuge for 2 min at 3000 × g and remove the supernatant.</li>
+        <li>Wash with 1 mL dH<sub>2</sub>O.</li>
+        <li>Transfer into a 1.5 mL microtube, centrifuge, and remove the supernatant.</li>
+        <li>Resuspend in 0.5 mL dH<sub>2</sub>O.</li>
+        <li>Aliquot 0.1 mL per transformation.</li>
+        <li>Add 0.36 mL transformation mix to each aliquot. The mix contains:
+          <ul>
+            <li>240 µL 50% PEG</li>
+            <li>36 µL 1 M LiAc</li>
+            <li>50 µL carrier ssDNA</li>
+            <li>Up to 1200 ng plasmid DNA in 50 µL dH<sub>2</sub>O (the source notes this volume is almost too much)</li>
+          </ul>
+        </li>
+        <li>Incubate for 40 min at 42 °C in a water bath.</li>
+        <li>Centrifuge for 5–10 s and remove the supernatant.</li>
+        <li>Gently resuspend in 0.1 mL dH<sub>2</sub>O and plate all at once on SD-LW. Grow for approximately 3 days.</li>
+      </ol>
+
+      <h2>Spot Test</h2>
+      <ol>
+        <li>After transformation, replate grown colonies on SD-LW and allow them to grow for 2 days.</li>
+        <li>Inoculate colonies into 4 mL YPD and cultivate overnight at 28–30 °C with shaking.</li>
+        <li>Count cells in a Bürker chamber.</li>
+        <li>Spot cells in 5-fold serial dilutions, from a maximum of 10<sup>5</sup> cells to a minimum of 10<sup>1</sup> cells, on SD-LW, SD-LWA, SD-LWH, and SD-LWHA plates.</li>
+        <li>Grow the spots for 3–4 days at 28–30 °C.</li>
+      </ol>
+      <div class="note"><p><strong>Spot-test interpretation:</strong> compare growth across the four media. Include the appropriate controls for each interaction test.</p></div>
+  </div>
+
+  <h2>Solutions and Media</h2>
+  <table class="solution-table media-table">
+    <thead>
+      <tr><th>Medium / Solution</th><th>Composition</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>50% PEG (100 mL)</td>
+        <td>Dissolve 50 g PEG in 100 mL dH<sub>2</sub>O.<br><br>Filter-sterilize or autoclave.</td>
+      </tr>
+      <tr>
+        <td>1 M LiAc (100 mL)</td>
+        <td>LiAc dihydrate: 10.2 g; alternatively, anhydrous LiAc: 6.6 g.<br><br>Dissolve in 100 mL dH<sub>2</sub>O.<br><br>Filter-sterilize or autoclave.</td>
+      </tr>
+      <tr>
+        <td>Breaking buffer (400 mL)</td>
+        <td>2% Triton X-100: 8 mL (Sigma T-6878); 1% SDS: 40 mL of 10%; 100 mM NaCl: 2.34 g; 10 mM TrisCl, pH 8.0: 4 mL of 1 M; 1 mM EDTA, pH 8.0: 0.8 mL of 0.5 M.<br><br>Add water to 400 mL.</td>
+      </tr>
+      <tr>
+        <td>SD-x (1 L)</td>
+        <td>Yeast nitrogen base without amino acids: 6.67 g; glucose: 20 g; dropout mix: 0.5 g; agar: 2%.</td>
+      </tr>
+      <tr>
+        <td>YPADU (1 L)</td>
+        <td>Glucose: 20 g; peptone: 20 g; yeast extract: 10 g; adenine: 0.112 g; uracil: 0.022 g.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Plasmid Files</h2>
+  <div class="note">
+    <ul>
+      <li><a href="pGADT7_AD.dna" download>pGADT7-AD — empty vector</a></li>
+      <li><a href="pGBKT7_DB.dna" download>pGBKT7-BD — empty vector</a></li>
+    </ul>
+  </div>
+
+  <a class="back" href="../protocols.html">← Back to protocols</a>
+</div>
+</body>
+</html>
