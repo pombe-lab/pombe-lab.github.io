@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iVEC3 cloning</title>
+<style>
+    body {
+        margin: 0;
+        background: #e5e5e5;
+        font-family: 'Lato', Arial, Helvetica, sans-serif;
+        color: #333;
+    }
+
+    .page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 55px 30px 60px;
+    }
+
+    h1 {
+        font-family: Georgia, serif;
+        text-align: center;
+        font-size: 42px;
+        margin: 0 0 12px;
+        color: #333;
+    }
+
+    .subtitle {
+        text-align: center;
+        font-family: Georgia, serif;
+        font-size: 24px;
+        color: #52705d;
+        margin-bottom: 45px;
+    }
+
+    h2 {
+        font-family: Georgia, serif;
+        font-size: 25px;
+        margin: 38px 0 18px;
+        color: #52705d;
+    }
+
+    h3 {
+        font-family: Georgia, serif;
+        font-size: 20px;
+        margin: 30px 0 15px;
+        color: #333;
+    }
+
+    p {
+        font-size: 13px;
+        line-height: 1.7;
+        text-align: justify;
+        margin: 0 0 14px;
+    }
+
+    ol {
+        margin: 0 0 20px 25px;
+        padding-left: 20px;
+    }
+
+    ol > li {
+        font-size: 13px;
+        line-height: 1.7;
+        margin-bottom: 9px;
+        padding-left: 5px;
+    }
+
+    ul {
+        margin: 7px 0 12px 0;
+        padding-left: 25px;
+        list-style-type: circle;
+    }
+
+    ul li {
+        font-size: 13px;
+        line-height: 1.7;
+        margin-bottom: 5px;
+    }
+
+    .principle {
+        background: #eeeeee;
+        border-radius: 12px;
+        padding: 18px 22px;
+        margin: 0 0 30px;
+        line-height: 1.6;
+    }
+
+    .principle p {
+        margin: 0 0 10px;
+    }
+
+    .principle p:last-child {
+        margin-bottom: 0;
+    }
+
+    .note {
+        background: #eeeeee;
+        border-radius: 12px;
+        padding: 18px 22px;
+        margin: 25px 0;
+        line-height: 1.6;
+    }
+
+    .note ul {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .solution-table {
+        width: auto;
+        max-width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0 30px;
+        background: white;
+        font-size: 13px;
+    }
+
+    .solution-table th,
+    .solution-table td {
+        border: 1px solid #ccc;
+        padding: 9px 11px;
+        text-align: left;
+        vertical-align: top;
+        line-height: 1.5;
+    }
+
+    .solution-table th {
+        background: #B8D8C0;
+        font-family: Georgia, serif;
+        font-weight: normal;
+    }
+
+    .media-table {
+        width: 100%;
+    }
+
+    .media-table th,
+    .media-table td {
+        padding: 8px 11px;
+        line-height: 1.4;
+    }
+
+    .media-table td br + br {
+        display: none;
+    }
+
+    .solution-table td:first-child {
+        white-space: nowrap;
+        width: 1%;
+    }
+
+    .back {
+        display: block;
+        text-align: center;
+        margin-top: 45px;
+        color: #52705d;
+        text-decoration: none;
+        font-size: 16px;
+    }
+
+    .back:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 700px) {
+        .page {
+            padding: 40px 20px 50px;
+        }
+
+        h1 {
+            font-size: 34px;
+        }
+
+        .subtitle {
+            font-size: 21px;
+        }
+
+        h2 {
+            font-size: 23px;
+        }
+
+        .solution-table {
+            font-size: 12px;
+        }
+    }
+
+    .calc-panel { background: #fff; border-radius: 12px; padding: 20px 22px; margin: 18px 0 28px; }
+    .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .calc-card { background: #eeeeee; border-radius: 10px; padding: 15px; }
+    .calc-card h3 { margin: 0 0 12px; font-size: 18px; }
+    .calc-field { display: grid; grid-template-columns: 1fr 110px; gap: 10px; align-items: center; margin: 9px 0; font-size: 13px; }
+    .calc-field input { width: 100%; box-sizing: border-box; border: 1px solid #b9c7bd; border-radius: 5px; padding: 7px 8px; font: inherit; background: #fff; color: #333; }
+    .calc-result { margin-top: 15px; padding-top: 12px; border-top: 1px solid #c8d8cc; font-size: 13px; line-height: 1.7; }
+    .calc-result strong { color: #355c46; }
+    .small-note { font-size: 12px; color: #555; }
+    .protocol-table { width: 100%; border-collapse: collapse; margin: 15px 0 28px; background: white; font-size: 13px; }
+    .protocol-table th, .protocol-table td { border: 1px solid #ccc; padding: 8px 10px; text-align: left; vertical-align: top; line-height: 1.5; }
+    .protocol-table th { background: #B8D8C0; font-family: Georgia, serif; font-weight: normal; }
+    .reference { background: #eeeeee; border-radius: 12px; padding: 18px 22px; font-size: 13px; line-height: 1.7; overflow-wrap: anywhere; }
+    @media (max-width: 700px) { .calc-grid { grid-template-columns: 1fr; } .calc-field { grid-template-columns: 1fr 100px; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>iVEC3 cloning</h1>
+  <div class="subtitle"><em>in vivo E. coli</em> cloning</div>
+
+  <h2>Principle</h2>
+  <div class="principle">
+    <p>The iVEC system uses the endogenous DNA-repair and replication machinery of <em>Escherichia coli</em> to assemble linear DNA fragments carrying homologous overlapping sequences after they enter the cell. Unlike Gibson Assembly or HiFi DNA Assembly, which assemble fragments <strong>in vitro</strong> using an added enzyme mix, iVEC assembly occurs <strong>inside the bacterial cell</strong>.</p>
+    <p>The key exonuclease direction differs: iVEC relies mainly on E. coli Exonuclease III (XthA), a <strong>3′→5′ exonuclease</strong>, which resects the 3′ ends and exposes complementary 5′ single-stranded overhangs. Gibson/HiFi assembly commonly uses T5 exonuclease, which resects the <strong>5′→3′</strong> direction to expose complementary 3′ overhangs. The complementary overlaps anneal; the cell then processes and repairs the assembled DNA.</p>
+  </div>
+
+  <h2>Vector and Insert preparation</h2>
+  <ol>
+    <li><strong>PCR amplification.</strong> Prepare vector and/or insert by PCR using the following example reaction:
+      <table class="protocol-table">
+        <thead><tr><th>Component</th><th>Volume</th><th>PCR program</th></tr></thead>
+        <tbody>
+          <tr><td>gDNA / pDNA</td><td>1 µL</td><td rowspan="5">94 °C – 5 min<br>94 °C – 10 s<br>55 °C – 10 s<br>70 °C – 10 s / 1 kb<br><em>Repeat the cycling steps 35×</em><br>72 °C – 3 min</td></tr>
+          <tr><td>2× MM KOD1</td><td>25 µL</td></tr>
+          <tr><td>Primers</td><td>1.5 / 1.5 µL</td></tr>
+          <tr><td>dH₂O</td><td>21 µL</td></tr>
+          <tr><td><strong>Total</strong></td><td><strong>50 µL</strong></td></tr>
+        </tbody>
+      </table>
+    </li>
+    <li>If the vector was prepared by inverse PCR:
+      <ul><li>Add 0.5 µL DpnI and incubate for 15 min at 37 °C.</li><li>The vector can alternatively be prepared by restriction digestion.</li></ul>
+    </li>
+    <li>Purify vector(s) and insert(s) using a purification kit.</li>
+    <li>Measure sample concentrations.</li>
+  </ol>
+
+  <div class="note">
+    <p><strong>Why add DpnI?</strong> DpnI cuts methylated DNA at its recognition site, 5′-G<sup>m</sup>6ATC-3′. Plasmids propagated in standard <em>E. coli</em> strains are generally Dam-methylated, whereas newly synthesized PCR products are unmethylated and therefore resistant to DpnI. Digesting the reaction reduces carry-over of the parental template plasmid and can lower background colonies after transformation.</p>
+  </div>
+
+  <h2>2. Calculation for iVEC3</h2>
+  <p>Enter the length and measured concentration of the vector and insert. The calculator uses 0.05 pmol vector and 0.15 pmol insert, as in the example calculation below. DNA mass is estimated using 0.66 ng per pmol per base pair.</p>
+  <div class="calc-panel">
+    <div class="calc-grid">
+      <div class="calc-card">
+        <h3>Vector</h3>
+        <label class="calc-field"><span>Length (bp)</span><input id="vecLength" type="number" min="1" step="1" value="3766"></label>
+        <label class="calc-field"><span>Concentration (ng/µL)</span><input id="vecConc" type="number" min="0.01" step="0.1" value="65.7"></label>
+        <div class="calc-result" id="vecResult" aria-live="polite"></div>
+      </div>
+      <div class="calc-card">
+        <h3>Insert</h3>
+        <label class="calc-field"><span>Length (bp)</span><input id="insLength" type="number" min="1" step="1" value="265"></label>
+        <label class="calc-field"><span>Concentration (ng/µL)</span><input id="insConc" type="number" min="0.01" step="0.1" value="22.2"></label>
+        <div class="calc-result" id="insResult" aria-live="polite"></div>
+      </div>
+    </div>
+    <p class="small-note">Formula: mass (ng) = amount (pmol) × length (bp) × 0.66. Volume (µL) = mass (ng) ÷ concentration (ng/µL). The values are editable and update automatically.</p>
+  </div>
+
+  <h2>3. iVEC3 system transformation</h2>
+  <ol>
+    <li>Thaw frozen competent cells on ice.</li>
+    <li>Add vector and insert, mixing gently by pipetting.</li>
+    <li>Incubate on ice for 20 min.</li>
+    <li>Add 1 mL room-temperature LB broth and mix by inversion (no heat shock required).</li>
+    <li>Incubate in a 37 °C water bath for 45 min, without shaking.</li>
+    <li>Centrifuge at 5,000 × g for 1 min at room temperature.</li>
+    <li>Discard the supernatant, leaving approximately 100 µL, and resuspend the whole cell pellet.</li>
+    <li>Spread the entire volume onto an agar plate and incubate overnight at 37 °C.</li>
+  </ol>
+  <div class="note"><p><strong>Control:</strong> Always include a linearized-vector-only control.</p></div>
+
+  <h2>References</h2>
+  <div class="reference">Nozaki, S., &amp; Niki, H. (2019). Exonuclease III (XthA) Enforces <em>In Vivo</em> DNA Cloning of <em>Escherichia coli</em> To Create Cohesive Ends. <em>Journal of Bacteriology, 201</em>(5), e00660-18. <a href="https://doi.org/10.1128/JB.00660-18" target="_blank" rel="noopener">https://doi.org/10.1128/JB.00660-18</a></div>
+
+  <a class="back" href="protocols.html">← Back to protocols</a>
+</div>
+<script>
+(function () {
+  function update() {
+    const items = [
+      { prefix: 'vec', amount: 0.05, result: 'vecResult', label: 'Vector' },
+      { prefix: 'ins', amount: 0.15, result: 'insResult', label: 'Insert' }
+    ];
+    items.forEach(function (item) {
+      const length = Number(document.getElementById(item.prefix + 'Length').value);
+      const concentration = Number(document.getElementById(item.prefix + 'Conc').value);
+      const out = document.getElementById(item.result);
+      if (!Number.isFinite(length) || length <= 0 || !Number.isFinite(concentration) || concentration <= 0) {
+        out.textContent = 'Enter a positive length and concentration.';
+        return;
+      }
+      const mass = item.amount * length * 0.66;
+      const volume = mass / concentration;
+      out.innerHTML = '<strong>Target amount:</strong> ' + item.amount.toFixed(2) + ' pmol<br>' +
+        '<strong>DNA mass:</strong> ' + mass.toFixed(2) + ' ng<br>' +
+        '<strong>Volume to add:</strong> ' + volume.toFixed(2) + ' µL';
+    });
+  }
+  ['vecLength', 'vecConc', 'insLength', 'insConc'].forEach(function (id) {
+    document.getElementById(id).addEventListener('input', update);
+  });
+  update();
+})();
+</script>
+</body>
+</html>
