@@ -316,6 +316,10 @@
                 overflow-x: auto;
             }
         }
+        .references { padding-left: 20px; margin: 8px 0; }
+        .references li { margin: 0 0 10px; line-height: 1.5; text-align: left; }
+        .references a { color: #52705d; overflow-wrap: anywhere; }
+        .reference-note { font-size: 12px; color: #666; line-height: 1.5; }
     </style>
 </head>
 
@@ -358,6 +362,9 @@
             </p>
         </div>
 
+        <h2>PLATING TARGETS</h2>
+        <div class="formula"><p><label for="target-foa">Target cells on YES + 5-FOA</label><input id="target-foa" type="number" min="1" step="1" value="100000"></p><p><label for="target-yes">Target cells on YES control</label><input id="target-yes" type="number" min="1" step="1" value="100"></p></div>
+
         <h2>CALCULATION</h2>
 
         <div class="formula">
@@ -396,6 +403,8 @@
         <button type="button" class="download-button" id="download-excel">
             Download results as Excel
         </button>
+        <button type="button" class="download-button" id="send-to-ura4" style="margin-left:8px;background:#78AA8A;color:white;">Send to ura4-loss calculator</button>
+        <p id="transfer-status" class="help" aria-live="polite"></p>
         <div id="result-content"></div>
     </div>
 
@@ -403,13 +412,20 @@
         ← Back to calculations
     </a>
 
+<h2 style="font-family:Georgia,serif;color:#52705d;margin-top:34px;">REFERENCES</h2>
+<section class="card" style="background:#f4f4f4;border-radius:15px;padding:20px;margin:15px 0;box-shadow:0 3px 8px rgba(0,0,0,.09);">
+<ol class="references">
+<li><strong>Zaratiegui, M., Vaughn, M. W., Irvine, D. V., Goto, D., Watt, S., Bähler, J., Arcangioli, B. &amp; Martienssen, R. A. (2011).</strong> CENP-B preserves genome integrity at replication forks paused by retrotransposon LTR. <em>Nature</em> 469, 112–115. <a href="https://doi.org/10.1038/nature09608" target="_blank" rel="noopener">https://doi.org/10.1038/nature09608</a>.</li>
+</ol>
+
+</section>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/exceljs/dist/exceljs.min.js"></script>
 
 <script>
-const TARGET_FOA = 100000;
-const TARGET_YES = 100;
+let TARGET_FOA = 100000;
+let TARGET_YES = 100;
 const MIN_VOLUME = 20;
 const MAX_VOLUME = 120;
 
@@ -833,6 +849,16 @@ function escapeHtml(text) {
 
 document.getElementById("add-strain").addEventListener("click", addStrain);
 document.getElementById("calculate").addEventListener("click", calculate);
+document.getElementById("target-foa").addEventListener("change",e=>{const v=Number(e.target.value);if(v>0)TARGET_FOA=v;});
+document.getElementById("target-yes").addEventListener("change",e=>{const v=Number(e.target.value);if(v>0)TARGET_YES=v;});
+
+document.getElementById('send-to-ura4').addEventListener('click',()=>{
+    if(!latestResults.length){errorBox.textContent='Please calculate plating volumes first.';errorBox.style.display='block';return;}
+    const payload={version:1,createdAt:new Date().toISOString(),cultureVolumeMl:20,targets:{foa:TARGET_FOA,yes:TARGET_YES},strains:latestResults.map(s=>({name:s.name,colonies:s.colonies.map(c=>({colony:c.colony,concentration:c.concentration,foa:{target:TARGET_FOA,dilutionFactor:c.foa.factor,platingVolumeUl:c.foa.finalVolume,possible:c.foa.possible},yes:{target:TARGET_YES,dilutionFactor:c.yes.factor,platingVolumeUl:c.yes.finalVolume,possible:c.yes.possible}}))}))};
+    localStorage.setItem('pombeUra4PlatingTransfer',JSON.stringify(payload));
+    document.getElementById('transfer-status').textContent='Plating data saved in this browser. Open the ura4-loss frequency calculator and select “Import plating data”.';
+});
+
 document.getElementById("download-excel").addEventListener("click", downloadExcel);
 
 addStrain();
