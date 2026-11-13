@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,7 +38,7 @@ button{border:none;border-radius:8px;padding:9px 13px;font-size:12px;font-weight
 table{width:100%;border-collapse:collapse;background:#fff}
 th,td{padding:8px;border-bottom:1px solid #ddd;text-align:left;font-size:11px}
 th{background:#d9e5dc}
-.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:13px}
+.summary-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-top:13px}
 .stat{background:#fff;border:1px solid #ddd;border-radius:9px;padding:10px}
 .stat-label{font-size:10px;color:#666}
 .stat-value{font-family:Georgia,serif;font-size:17px;font-weight:bold;margin-top:3px}
@@ -49,7 +50,6 @@ th{background:#d9e5dc}
 .back{display:block;text-align:center;margin-top:35px;color:#52705d;text-decoration:none;font-size:16px}
 .back:hover{text-decoration:underline}
 .references{padding-left:20px;margin:8px 0}.references li{margin:0 0 10px;line-height:1.5;text-align:left}.references a{color:#52705d;overflow-wrap:anywhere}.reference-note{font-size:12px;color:#666;line-height:1.5}
-
 .graph-card{background:#fff;border:1px solid #d8d8d8;border-radius:13px;padding:18px;margin:14px 0}
 .graph-wrap{width:100%;overflow-x:auto}
 #frequencyGraph{display:block;width:100%;min-width:620px;height:390px}
@@ -59,7 +59,6 @@ details.optional-analysis{background:#f4f4f4;border-radius:15px;padding:18px 20p
 .legend{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin-top:8px;font-size:12px;color:#555}
 .legend-item{display:flex;align-items:center;gap:6px}
 .legend-box{width:13px;height:13px;border-radius:2px;border:1px solid #bbb}
-
 @media(max-width:700px){
 .page{padding:28px 15px 45px}h1{font-size:30px}
 .input-grid,.compare-grid,.characterization-grid,.summary-grid{grid-template-columns:1fr}
@@ -70,18 +69,16 @@ details.optional-analysis{background:#f4f4f4;border-radius:15px;padding:18px 20p
 <body>
 <div class="page">
 <h1>URA4 LOSS FREQUENCY CALCULATOR</h1>
-
 <div class="description">
-<p>Calculate ura4 loss frequency from paired YES and YES + 5-FOA colony counts, normalized to plating survival. Each independently plated culture is entered as one paired observation. The calculator also summarizes optional eviction/conversion characterization and allows user-defined statistical comparisons between strains.</p>
+<p>Analyse ura4-loss fluctuation assays using independent cultures and paired YES and YES + 5-FOA plating data. The primary analysis follows the Lea–Coulson median approach used by Zaratiegui et al. (2011). When only a fraction of each culture is plated on 5-FOA, the calculator uses a partial-plating-aware Luria–Delbrück likelihood model instead of applying the uncorrected Lea–Coulson equation to the plated counts. The calculator also reports per-culture resistant-cell frequencies and optional eviction/conversion characterization.</p>
 </div>
 
 <h2>CALCULATION LOGIC</h2>
 <div class="card">
-<p class="help">The ura4 loss frequency is calculated by correcting the number of colonies growing on YES + 5-FOA for the survival/plating efficiency measured on YES plates.</p>
-<p class="help"><strong>1. Survival:</strong> YES colonies / 100</p>
-<p class="help"><strong>2. Survival-corrected 5-FOA colonies:</strong> 5-FOA colonies / survival</p>
-<p class="help"><strong>3. Ura4 loss frequency:</strong> survival-corrected 5-FOA colonies / 100,000 × 100</p>
-<p class="help"><strong>Lea–Coulson method of the median:</strong> estimates the number of mutation events per culture from the median number of resistant colonies across independent cultures. The calculator then converts this to a mutation rate using the final population size and, when the cultures have sufficiently similar sampling fractions and population sizes, a partial-plating correction. This is a separate mutation-rate analysis; it is not the median ura4-loss frequency reported by Zaratiegui et al. (2011).</p>
+<p class="help"><strong>Per-culture resistant-cell frequency:</strong> (5-FOA colonies / cells represented on 5-FOA) ÷ (YES colonies / cells represented on YES). This descriptive frequency is corrected for the two plating targets and is calculated separately for each independent culture.</p>
+<p class="help"><strong>Fluctuation analysis:</strong> the Lea–Coulson median estimator uses the distribution of 5-FOA-resistant colony counts across independent cultures to estimate the mean number of mutation events per culture (m). The mutation rate is estimated as μ = m / N<sub>t</sub>, where N<sub>t</sub> is the final viable population size. The YES control estimates the viable fraction: N<sub>t</sub> = measured total cell concentration × culture volume × (YES colonies / YES target cells).</p>
+<p class="help"><strong>Partial plating:</strong> the plated fraction is calculated as 5-FOA target cells ÷ total cells in the culture. The final viable population used to calculate μ is corrected separately using the YES control. When only a fraction is plated, the calculator uses the Luria–Delbrück distribution with binomial thinning to account for each culture’s actual plated fraction. This is a partial-plating-aware maximum-likelihood extension, not an uncorrected Lea–Coulson estimate.</p>
+<p class="help"><strong>Confidence intervals:</strong> the descriptive median frequency uses an exact binomial order-statistic interval. The fluctuation-model estimate uses a 95% profile-likelihood interval when partial plating is used. Zaratiegui et al. report 95% confidence intervals based on a binomial distribution.</p>
 <p class="help">The <strong>Eviction / Conversion Characterization</strong> is calculated separately and describes the composition of the ura4-loss events; it does not affect the ura4 loss frequency or the statistical comparisons.</p>
 </div>
 
@@ -90,7 +87,7 @@ details.optional-analysis{background:#f4f4f4;border-radius:15px;padding:18px 20p
 <div class="fast-note" id="transferNotice">Plating data can be transferred from the plating calculator. Use “Send to ura4-loss calculator” on that page, then import them here.</div>
 <div class="button-row"><button type="button" class="secondary" id="importPlatingButton">Import plating data</button></div>
 <div class="help" id="importStatus" aria-live="polite"></div>
-<p class="help">Paste one count per line into each box. The YES and 5-FOA lists must contain the same number of values. <strong>0 is a valid measurement.</strong></p>
+<p class="help">Paste one count per line into each box. The YES and 5-FOA lists must contain the same number of values. <strong>0 is a valid measurement.</strong> For fluctuation analysis, import the plating plan so the calculator has the final viable concentration, culture volume and actual 5-FOA plated fraction for each culture.</p>
 <div id="strains"></div>
 <div class="button-row">
 <button type="button" class="primary" id="addStrainButton">+ Add strain</button>
@@ -99,18 +96,20 @@ details.optional-analysis{background:#f4f4f4;border-radius:15px;padding:18px 20p
 
 <h2>FINAL RESULTS</h2>
 <div class="card">
+<p class="help">The table reports the median per-culture resistant-cell frequency and its exact 95% order-statistic confidence interval. Mean, SD and SEM are also shown for transparency; the mean is not used as the fluctuation-test estimator.</p>
 <div id="summary"></div>
 </div>
 
-
-<h2>MUTATION-RATE ANALYSIS</h2>
+<h2>ZARATIEGUI-STYLE FLUCTUATION ANALYSIS</h2>
 <div class="card">
-<h3>Lea–Coulson method of the median</h3>
-<p class="help">This is the standard, built-in mutation-rate estimate. It uses the distribution of 5-FOA-resistant colony counts across independent cultures. The classical Lea–Coulson median equation is not, by itself, a partial-plating correction. Because your assay plates only a fraction of each culture, this calculator will only convert the classical estimate into a mutation rate when essentially the complete culture is represented. For your usual partial-plating design, use the optional mlemur workflow or a validated partial-plating estimator; the calculator will not apply an unsupported correction.</p>
-<div id="leaCoulsonStatus" class="fast-note" aria-live="polite">Import plating data and enter paired colony counts to evaluate whether Lea–Coulson assumptions are met.</div>
-<div class="table-wrap"><table id="leaResultsTable"><thead><tr><th>Strain</th><th>Independent cultures</th><th>Median 5-FOA colonies</th><th>Estimated mutation rate</th><th>Approx. 95% bootstrap CI</th><th>Assessment</th></tr></thead><tbody><tr><td colspan="6" class="empty">Enter culture data to calculate.</td></tr></tbody></table></div>
-<div class="graph-card"><div class="graph-wrap"><svg id="leaMutationRateGraph" viewBox="0 0 900 360" role="img" aria-label="Lea Coulson mutation rate estimates with bootstrap confidence intervals"></svg></div></div>
+<h3>Lea–Coulson median approach</h3>
+<p class="help">Zaratiegui et al. (2011) used 12 independent cultures per strain, calculated mutation frequencies with the Lea–Coulson median estimator, and reported 95% confidence intervals based on a binomial distribution. Their supplementary methods also describe rich-medium dilution plates to account for cell death and plating efficiency. The supplement does not specify the exact fraction of each culture plated on 5-FOA. The classical Lea–Coulson equation is used when the complete culture is represented on selective medium. For partial plating, this calculator instead fits the standard Luria–Delbrück distribution after binomial thinning by each culture’s plated fraction. This is an explicit partial-plating extension and accommodates different plated fractions and final viable population sizes.</p>
+<p class="help"><strong>Partial-plating model:</strong> the number of 5-FOA-resistant colonies observed on a plate is treated as a random sample of the mutant population in that culture. The likelihood accounts for the fraction of the culture represented on that plate; it does not simply multiply the observed colony count by the inverse plated fraction.</p>
+<div id="leaCoulsonStatus" class="fast-note" aria-live="polite">Import plating data and enter paired colony counts to calculate the fluctuation estimate.</div>
+<div class="table-wrap"><table id="leaResultsTable"><thead><tr><th>Strain</th><th>Independent cultures</th><th>Median 5-FOA colonies</th><th>Median fraction plated</th><th>Estimator</th><th>m (events/culture)</th><th>Mutation rate μ</th><th>95% CI for μ</th><th>Assessment</th></tr></thead><tbody><tr><td colspan="9" class="empty">Enter culture data to calculate.</td></tr></tbody></table></div>
+<div class="graph-card"><div class="graph-wrap"><svg id="leaMutationRateGraph" viewBox="0 0 900 360" role="img" aria-label="Mutation rate estimates with 95 percent confidence intervals"></svg></div></div>
 </div>
+
 <details class="optional-analysis">
 <summary>Optional analysis: mlemur (maximum-likelihood method)</summary>
 <div class="inner">
@@ -136,7 +135,7 @@ details.optional-analysis{background:#f4f4f4;border-radius:15px;padding:18px 20p
 
 <h2>STATISTICAL COMPARISONS</h2>
 <div class="card">
-<p class="help">Define only the biological comparisons you want to test. The statistics apply to ura4-loss frequency only. Eviction/conversion data are not used for statistical testing.</p>
+<p class="help">Define only the biological comparisons you want to test. The statistics apply to per-culture ura4-loss frequency only. The calculator uses a Mann–Whitney U test and applies a Bonferroni correction across the comparisons entered, matching the approach reported by Zaratiegui et al. Eviction/conversion data are not used for statistical testing.</p>
 <div id="comparisons"></div>
 <button type="button" class="secondary" id="addComparisonButton">+ Add comparison</button>
 </div>
@@ -149,7 +148,7 @@ details.optional-analysis{background:#f4f4f4;border-radius:15px;padding:18px 20p
 
 <h2>URA4 LOSS FREQUENCY GRAPH</h2>
 <div class="card">
-<p class="help">The graph shows mean ura4-loss frequency for each strain with SD error bars. When eviction/conversion data are available, each column is divided according to their proportions. The total column height remains the mean ura4-loss frequency.</p>
+<p class="help">The graph shows median per-culture ura4-loss frequency with an exact 95% order-statistic confidence interval. When eviction/conversion data are available, each column is divided according to their proportions. The total column height remains the median frequency.</p>
 <div class="graph-card">
   <div class="graph-wrap">
     <svg id="frequencyGraph" viewBox="0 0 900 390" role="img" aria-label="Ura4 loss frequency graph"></svg>
@@ -176,10 +175,10 @@ details.optional-analysis{background:#f4f4f4;border-radius:15px;padding:18px 20p
 <li><strong>Lea, D. E. &amp; Coulson, C. A. (1949).</strong> The distribution of the numbers of mutants in bacterial populations. <em>Journal of Genetics</em> 49, 264–285. <a href="https://doi.org/10.1007/BF02986080" target="_blank" rel="noopener">https://doi.org/10.1007/BF02986080</a>.</li>
 <li><strong>Rosche, W. A. &amp; Foster, P. L. (2000).</strong> Determining mutation rates in bacterial populations. <em>Methods</em> 20(1), 4–17. <a href="https://doi.org/10.1006/meth.1999.0901" target="_blank" rel="noopener">https://doi.org/10.1006/meth.1999.0901</a>.</li>
 <li><strong>Foster, P. L. (2006).</strong> Methods for determining spontaneous mutation rates. <em>Methods in Enzymology</em> 409, 195–213. <a href="https://doi.org/10.1016/S0076-6879(05)09012-9" target="_blank" rel="noopener">https://doi.org/10.1016/S0076-6879(05)09012-9</a>.</li>
+<li><strong>Jones, M. E. (1994).</strong> Luria–Delbrück fluctuation experiments; accounting simultaneously for plating efficiency and differential growth rate. <em>Journal of Theoretical Biology</em> 166(3), 355–363. <a href="https://doi.org/10.1006/jtbi.1994.1032" target="_blank" rel="noopener">https://doi.org/10.1006/jtbi.1994.1032</a>.</li>
 <li><strong>Łazowski, K. (2023).</strong> Efficient, robust, and versatile fluctuation data analysis using MLE MUtation Rate calculator (mlemur). <em>Mutation Research/Fundamental and Molecular Mechanisms of Mutagenesis</em> 826, 111816. <a href="https://doi.org/10.1016/j.mrfmmm.2023.111816" target="_blank" rel="noopener">https://doi.org/10.1016/j.mrfmmm.2023.111816</a>.</li>
 <li><strong>Zheng, Q. (2017).</strong> rSalvador: An R Package for the Fluctuation Experiment. <em>G3: Genes, Genomes, Genetics</em> 7(12), 3849–3856. <a href="https://doi.org/10.1534/g3.117.300120" target="_blank" rel="noopener">https://doi.org/10.1534/g3.117.300120</a>.</li>
 </ol>
-
 </div>
 
 <a class="back" href="calculations.html">← Back to calculations</a>
@@ -338,14 +337,9 @@ function renderStrains(){
       const s=state.strains.find(x=>x.id===el.dataset.id);
       if(!s)return;
       s.name=el.value;
-
-      // Do not re-render the strain card while the user is typing.
-      // Re-rendering would replace the input element and make it lose focus
-      // after the first character.
       const card=el.closest("[data-strain-card]");
       const title=card ? card.querySelector(".strain-name") : null;
       if(title) title.textContent=el.value || ("Strain "+(state.strains.indexOf(s)+1));
-
       renderComparisons();
       renderCharacterization();
     });
@@ -373,7 +367,6 @@ function renderStrains(){
       renderAll();
     });
   });
-
   renderTablesOnly();
 }
 
@@ -416,23 +409,70 @@ function renderTablesOnly(){
   });
 }
 
+function medianCI(values, confidence=0.95){
+  const a=values.filter(Number.isFinite).slice().sort((x,y)=>x-y);
+  const n=a.length;
+  if(!n)return {median:null,lower:null,upper:null,coverage:null};
+  const med=median(a);
+  const binomProb=(k)=>{
+    let p=Math.pow(0.5,n),sum=0;
+    for(let i=0;i<=k;i++){
+      if(i===0)p=Math.pow(0.5,n);
+      else p*=((n-i+1)/i);
+      sum+=p;
+    }
+    return sum;
+  };
+  let rank=1,coverage=1;
+  for(let k=1;k<=Math.floor((n+1)/2);k++){
+    const cov=1-2*binomProb(k-1);
+    if(cov>=confidence){rank=k;coverage=cov;}else break;
+  }
+  if(coverage<confidence)return {median:med,lower:null,upper:null,coverage:null};
+  return {median:med,lower:a[rank-1],upper:a[n-rank],coverage};
+}
 function renderSummary(){
   const box=document.getElementById("summary");
   box.innerHTML=state.strains.map(s=>{
-    const a=strainFrequencies(s),m=mean(a),d=sd(a),se=sem(a);
-    const n=Math.min(s.yes.length,s.foa.length);
+    const a=strainFrequencies(s),stats=medianCI(a),m=mean(a),d=sd(a),se=sem(a);
     const mismatch=s.yes.length!==s.foa.length;
     return `<div class="strain-card">
       <div class="strain-name">${esc(s.name)}</div>
       ${mismatch?`<p class="help" style="color:#8a5b20"><strong>Input mismatch:</strong> YES has ${s.yes.length} values and 5-FOA has ${s.foa.length}. Only paired values are used until the lists match.</p>`:""}
       <div class="summary-grid">
-        <div class="stat"><div class="stat-label">Mean frequency (%)</div><div class="stat-value">${fmtSci(m)}</div></div>
-        <div class="stat"><div class="stat-label">SD</div><div class="stat-value">${fmtSci(d)}</div></div>
+        <div class="stat"><div class="stat-label">Valid paired cultures</div><div class="stat-value">${a.length}</div></div>
+        <div class="stat"><div class="stat-label">Median frequency (%)</div><div class="stat-value">${fmtSci(stats.median)}</div></div>
+        <div class="stat"><div class="stat-label">95% CI for median</div><div class="stat-value" style="font-size:12px">${stats.lower!==null?fmtSci(stats.lower)+" – "+fmtSci(stats.upper):"Not available"}</div></div>
+        <div class="stat"><div class="stat-label">Mean ± SD (%)</div><div class="stat-value" style="font-size:13px">${fmtSci(m)} ± ${fmtSci(d)}</div></div>
         <div class="stat"><div class="stat-label">SEM</div><div class="stat-value">${fmtSci(se)}</div></div>
-        <div class="stat"><div class="stat-label">Paired colonies (n)</div><div class="stat-value">${n||"—"}</div></div>
       </div>
+      <p class="help">Median CI method: exact binomial order-statistic interval${stats.coverage?` (coverage ${(stats.coverage*100).toFixed(1)}%)`:"; not enough cultures for a distribution-free 95% interval"}.</p>
     </div>`;
   }).join("");
+}
+
+function normalCDF(x){
+  const sign=x<0?-1:1,z=Math.abs(x)/Math.sqrt(2),t=1/(1+0.3275911*z);
+  const erf=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-z*z);
+  return 0.5*(1+sign*erf);
+}
+function mannWhitney(a,b,numberOfComparisons=1){
+  if(a.length<2||b.length<2)return null;
+  const combined=[...a.map(v=>({v,g:0})),...b.map(v=>({v,g:1}))].sort((x,y)=>x.v-y.v);
+  let rankSumA=0,tieTerm=0;
+  for(let i=0;i<combined.length;){
+    let j=i+1;while(j<combined.length&&combined[j].v===combined[i].v)j++;
+    const tie=j-i,avgRank=((i+1)+j)/2;
+    for(let k=i;k<j;k++)if(combined[k].g===0)rankSumA+=avgRank;
+    if(tie>1)tieTerm+=tie*tie*tie-tie;
+    i=j;
+  }
+  const n1=a.length,n2=b.length,N=n1+n2,U1=rankSumA-n1*(n1+1)/2,center=n1*n2/2;
+  const variance=n1*n2/12*((N+1)-tieTerm/(N*(N-1)));
+  if(!(variance>0))return {nA:n1,nB:n2,medianA:median(a),medianB:median(b),U:U1,rawP:1,p:1};
+  const z=Math.max(0,(Math.abs(U1-center)-0.5)/Math.sqrt(variance));
+  const rawP=Math.min(1,2*(1-normalCDF(z)));
+  return {nA:n1,nB:n2,medianA:median(a),medianB:median(b),U:Math.min(U1,n1*n2-U1),rawP,p:Math.min(1,rawP*Math.max(1,numberOfComparisons)),z};
 }
 
 function renderComparisons(){
@@ -441,7 +481,7 @@ function renderComparisons(){
   box.innerHTML=state.comparisons.map((c,i)=>{
     const a=state.strains.find(s=>s.id===c.control),b=state.strains.find(s=>s.id===c.test);
     const ra=a?strainFrequencies(a):[],rb=b?strainFrequencies(b):[];
-    const r=a&&b?welch(ra,rb):null;
+    const r=a&&b?mannWhitney(ra,rb,state.comparisons.length):null;
     return `<div class="comparison">
       <div class="comparison-title">Comparison ${i+1}</div>
       <div class="compare-grid">
@@ -449,11 +489,12 @@ function renderComparisons(){
         <div class="field"><label>Strain to compare</label><select class="comparison-select" data-id="${c.id}" data-type="test"><option value="">Select strain</option>${state.strains.map(s=>`<option value="${s.id}" ${c.test===s.id?"selected":""}>${esc(s.name)}</option>`).join("")}</select></div>
       </div>
       ${r?`<div class="summary-grid">
-        <div class="stat"><div class="stat-label">Control mean</div><div class="stat-value">${fmtSci(r.meanA)}</div></div>
-        <div class="stat"><div class="stat-label">Test mean</div><div class="stat-value">${fmtSci(r.meanB)}</div></div>
-        <div class="stat"><div class="stat-label">Welch t-test p</div><div class="stat-value">${Number.isFinite(r.p)?(r.p<.001?"<0.001":r.p.toFixed(3)):"—"}</div></div>
-        <div class="stat"><div class="stat-label">n</div><div class="stat-value">${r.nA} vs ${r.nB}</div></div>
-      </div>`:`<p class="help">Select two strains with at least two valid frequency measurements each.</p>`}
+        <div class="stat"><div class="stat-label">Control median (%)</div><div class="stat-value">${fmtSci(r.medianA)}</div></div>
+        <div class="stat"><div class="stat-label">Test median (%)</div><div class="stat-value">${fmtSci(r.medianB)}</div></div>
+        <div class="stat"><div class="stat-label">Mann–Whitney U</div><div class="stat-value">${fmt(r.U,2)}</div></div>
+        <div class="stat"><div class="stat-label">Raw p-value</div><div class="stat-value">${r.rawP<.001?"<0.001":r.rawP.toFixed(3)}</div></div>
+        <div class="stat"><div class="stat-label">Bonferroni-adjusted p</div><div class="stat-value">${r.p<.001?"<0.001":r.p.toFixed(3)}</div></div>
+      </div><p class="help">n = ${r.nA} vs ${r.nB}; normal approximation with tie correction and continuity correction. Bonferroni correction uses ${state.comparisons.length} entered comparison(s).</p>`:`<p class="help">Select two strains with at least two valid frequency measurements each.</p>`}
       <button type="button" class="remove remove-comparison" data-id="${c.id}">× Remove comparison</button>
     </div>`;
   }).join("");
@@ -493,19 +534,12 @@ function renderCharacterization(){
     el.addEventListener("input",()=>{
       const s=state.strains.find(x=>x.id===el.dataset.id);
       if(!s)return;
-
       s[el.dataset.type]=el.value;
-
-      // Do not re-render the table while the user is typing.
-      // Re-rendering replaces the input element and would lose focus
-      // after the first digit.
       const row=el.closest("tr");
       if(!row)return;
-
       const e=s.eviction===""?null:Number(s.eviction);
       const c=s.conversion===""?null:Number(s.conversion);
       const total=Number.isFinite(e)&&Number.isFinite(c)?e+c:null;
-
       const cells=row.querySelectorAll("td");
       cells[3].textContent=total!==null?total:"—";
       cells[4].textContent=total>0?fmt(e/total*100,2)+"%":"—";
@@ -538,86 +572,64 @@ document.getElementById("addComparisonButton").addEventListener("click",()=>{
   renderComparisons();
 });
 
-
 function renderFrequencyGraph(){
   const svg=document.getElementById("frequencyGraph");
   if(!svg)return;
-
   const rows=state.strains.map(s=>{
-    const vals=strainFrequencies(s),m=mean(vals),d=sd(vals);
+    const vals=strainFrequencies(s),stats=medianCI(vals);
     const e=s.eviction===""?null:Number(s.eviction), c=s.conversion===""?null:Number(s.conversion);
     const total=Number.isFinite(e)&&Number.isFinite(c)?e+c:null;
-    return {
-      name:s.name||"Unnamed",
-      mean:m, sd:d,
-      eviction:total>0?m*(e/total):null,
-      conversion:total>0?m*(c/total):null
-    };
-  }).filter(r=>Number.isFinite(r.mean));
-
+    return {name:s.name||"Unnamed",median:stats.median,lower:stats.lower,upper:stats.upper,
+      eviction:total>0?stats.median*(e/total):null,
+      conversion:total>0?stats.median*(c/total):null};
+  }).filter(r=>Number.isFinite(r.median));
   if(!rows.length){
     svg.innerHTML='<foreignObject x="0" y="0" width="900" height="390"><div xmlns="http://www.w3.org/1999/xhtml" class="graph-empty">Enter paired YES and 5-FOA counts to display the graph.</div></foreignObject>';
     return;
   }
-
   const W=900,H=390,left=75,right=25,top=25,bottom=75;
   const plotW=W-left-right,plotH=H-top-bottom;
-  const maxVal=Math.max(...rows.map(r=>r.mean+(Number.isFinite(r.sd)?r.sd:0)),0);
-  // Use simple decimal percentage ticks, matching the Excel-style presentation.
-  // For the current data this gives 0.00%, 0.01%, 0.02%, 0.03%, 0.04%, 0.05%.
+  const maxVal=Math.max(...rows.map(r=>Number.isFinite(r.upper)?r.upper:r.median),0);
   const tickStep=maxVal<=0.1?0.01:Math.pow(10,Math.floor(Math.log10(maxVal))-1);
   const yMax=maxVal>0?Math.ceil(maxVal/tickStep)*tickStep:tickStep;
   const y=v=>top+plotH-(v/yMax)*plotH;
-  const barW=Math.min(95,plotW/rows.length*.58);
-  const gap=plotW/rows.length;
+  const barW=Math.min(95,plotW/rows.length*.58),gap=plotW/rows.length;
   let out="";
-
-  // Axes and grid
   for(let i=0;i<=5;i++){
-    const v=yMax*i/5, yy=y(v);
+    const v=yMax*i/5,yy=y(v);
     out+=`<line x1="${left}" y1="${yy}" x2="${W-right}" y2="${yy}" stroke="#dddddd" stroke-width="1"/>`;
-    out+=`<text x="${left-10}" y="${yy+4}" text-anchor="end" font-family="Arial" font-size="11" fill="#555">${v.toFixed(2)}%</text>`;
+    out+=`<text x="${left-10}" y="${yy+4}" text-anchor="end" font-family="Arial" font-size="11" fill="#555">${v.toPrecision(2)}%</text>`;
   }
   out+=`<line x1="${left}" y1="${top}" x2="${left}" y2="${top+plotH}" stroke="#888" stroke-width="1"/>`;
   out+=`<line x1="${left}" y1="${top+plotH}" x2="${W-right}" y2="${top+plotH}" stroke="#888" stroke-width="1"/>`;
-  out+=`<text x="18" y="${top+plotH/2}" transform="rotate(-90 18 ${top+plotH/2})" text-anchor="middle" font-family="Arial" font-size="12" fill="#444">Ura4 loss frequency (%)</text>`;
-
+  out+=`<text x="18" y="${top+plotH/2}" transform="rotate(-90 18 ${top+plotH/2})" text-anchor="middle" font-family="Arial" font-size="12" fill="#444">Median ura4-loss frequency (%)</text>`;
   rows.forEach((r,i)=>{
-    const cx=left+gap*(i+.5), x=cx-barW/2;
+    const cx=left+gap*(i+.5),x=cx-barW/2;
     let cumulative=0;
     const segments=[];
     if(Number.isFinite(r.eviction)){
       segments.push({v:r.eviction,fill:"#8FBEA1"});
       segments.push({v:r.conversion,fill:"#C8D8CC"});
-    }else{
-      segments.push({v:r.mean,fill:"#78AA8A"});
-    }
+    }else segments.push({v:r.median,fill:"#78AA8A"});
     segments.forEach(seg=>{
-      const rectY=y(cumulative+seg.v);
-      const baseY=y(cumulative);
-      const h=Math.max(0,baseY-rectY);
+      const rectY=y(cumulative+seg.v),baseY=y(cumulative),h=Math.max(0,baseY-rectY);
       out+=`<rect x="${x}" y="${rectY}" width="${barW}" height="${h}" rx="2" fill="${seg.fill}"/>`;
       cumulative+=seg.v;
     });
-    const err=Number.isFinite(r.sd)?r.sd:0;
-    if(err>0){
-      const yy=y(r.mean+err), yb=y(Math.max(0,r.mean-err));
-      out+=`<line x1="${cx}" y1="${yy}" x2="${cx}" y2="${yb}" stroke="#555" stroke-width="1.5"/>`;
-      out+=`<line x1="${cx-7}" y1="${yy}" x2="${cx+7}" y2="${yy}" stroke="#555" stroke-width="1.5"/>`;
-      out+=`<line x1="${cx-7}" y1="${yb}" x2="${cx+7}" y2="${yb}" stroke="#555" stroke-width="1.5"/>`;
+    if(Number.isFinite(r.lower)&&Number.isFinite(r.upper)){
+      const yy=y(r.upper),yb=y(Math.max(0,r.lower));
+      out+=`<line x1="${cx}" y1="${yy}" x2="${cx}" y2="${yb}" stroke="#444" stroke-width="1.5"/>`;
+      out+=`<line x1="${cx-7}" y1="${yy}" x2="${cx+7}" y2="${yy}" stroke="#444" stroke-width="1.5"/>`;
+      out+=`<line x1="${cx-7}" y1="${yb}" x2="${cx+7}" y2="${yb}" stroke="#444" stroke-width="1.5"/>`;
     }
     out+=`<text x="${cx}" y="${top+plotH+22}" text-anchor="middle" font-family="Arial" font-size="12" fill="#333">${esc(r.name)}</text>`;
-    out+=`<text x="${cx}" y="${Math.max(top+12,y(r.mean)-7)}" text-anchor="middle" font-family="Arial" font-size="10" fill="#444">${fmtSci(r.mean)}</text>`;
+    out+=`<text x="${cx}" y="${Math.max(top+12,y(r.median)-7)}" text-anchor="middle" font-family="Arial" font-size="10" fill="#444">${fmtSci(r.median)}</text>`;
   });
-
   svg.innerHTML=out;
 }
 
 function buildExcelChartSheet(wb,rows){
   if(typeof XLSX==="undefined" || !XLSX.utils.aoa_to_sheet)return null;
-  // Keep chart data in the workbook even if a particular Excel renderer
-  // does not preserve the chart object. The main downloadable workbook
-  // therefore always contains the exact values used for the graph.
   const ws=XLSX.utils.aoa_to_sheet([
     ["The Excel workbook contains the graph data on the 'Graph data' sheet."],
     ["The web calculator displays the graph live from the same values."],
@@ -636,78 +648,200 @@ function solveLeaCoulsonMedian(r){
  if(!(r>0))return null;
  let lo=1e-12,hi=1;
  const fn=m=>m*(1.24+Math.log(m));
- while(fn(hi)<r&&hi<1e12)hi*=2;
- for(let i=0;i<120;i++){const mid=(lo+hi)/2;if(fn(mid)<r)lo=mid;else hi=mid;}
+ while(fn(hi)<r&&hi<1e15)hi*=2;
+ for(let i=0;i<140;i++){const mid=(lo+hi)/2;if(fn(mid)<r)lo=mid;else hi=mid;}
  return (lo+hi)/2;
 }
 function leaInputsForStrain(s){
  const n=Math.min(s.yes.length,s.foa.length,(s.imported||[]).length);
  const rows=[];
  for(let i=0;i<n;i++){
-  const conc=Number(s.concentration?.[i]??s.imported?.[i]?.concentration);
+  const item=s.imported?.[i]||{};
+  const conc=Number(s.concentration?.[i]??item.concentration);
   const vol=Number(s.cultureVolumeMl||20);
-  const plated=Number(s.foaPlated?.[i]??s.imported?.[i]?.foa?.target);
-  const count=Number(s.foa[i]);
-  if(Number.isFinite(count)&&count>=0&&Number.isFinite(conc)&&conc>0&&Number.isFinite(vol)&&vol>0&&Number.isFinite(plated)&&plated>0){
-   const N=conc*vol; // final total cells per culture
-   const z=plated/(conc*vol*1000); // fraction of total cells represented on 5-FOA
-   if(z>0&&z<=1)rows.push({count,N,z});
+  const foaTarget=Number(s.foaPlated?.[i]??item.foa?.target);
+  const yesTarget=Number(s.yesPlated?.[i]??item.yes?.target);
+  const foaCount=Number(s.foa[i]),yesCount=Number(s.yes[i]);
+  const possible=item.foa?.possible!==false&&item.yes?.possible!==false;
+  if(Number.isInteger(foaCount)&&foaCount>=0&&Number.isInteger(yesCount)&&yesCount>0&&
+     Number.isFinite(conc)&&conc>0&&Number.isFinite(vol)&&vol>0&&
+     Number.isFinite(foaTarget)&&foaTarget>0&&Number.isFinite(yesTarget)&&yesTarget>0&&possible){
+   const totalCells=conc*vol;
+   const survival=yesCount/yesTarget;
+   const N=totalCells*survival;
+   const z=foaTarget/totalCells;
+   if(N>0&&z>0&&z<=1)rows.push({count:foaCount,N,z,survival,totalCells,culture:i+1});
   }
  }
  return rows;
 }
-function bootstrapLeaRate(rows,meanN,meanZ,iterations=2500){
- const counts=rows.map(x=>x.count),med=median(counts),mSample=solveLeaCoulsonMedian(med);
- if(mSample===null)return null;
- // Classical Lea–Coulson median estimator assumes the mutant distribution is observed without partial-plating thinning.
- // Do not apply an unvalidated partial-plating correction to this estimator.
- if(Math.abs(meanZ-1)>0.000001)return null;
- const mFull=mSample;
- const rate=mFull/meanN;
- // Non-parametric culture-level bootstrap; approximate interval, not an exact likelihood CI.
- let seed=314159;const rand=()=>{seed=(seed*48271)%2147483647;return seed/2147483647;};
- const boot=[];
- for(let b=0;b<iterations;b++){
-  const sample=[];for(let j=0;j<counts.length;j++)sample.push(counts[Math.floor(rand()*counts.length)]);
-  const mm=solveLeaCoulsonMedian(median(sample));if(mm===null)continue;
-  const corrected=mm;
-  if(corrected>0&&Number.isFinite(corrected))boot.push(corrected/meanN);
- }
- boot.sort((a,b)=>a-b);
- const q=p=>boot.length?boot[Math.min(boot.length-1,Math.floor(p*(boot.length-1)))]:null;
- return {rate,lower:q(.025),upper:q(.975),median:med,mSample,mFull};
+
+function binomialMedianRanks(n,confidence=.95){
+  const cdf=k=>{
+    let term=Math.pow(.5,n),sum=term;
+    for(let i=1;i<=k;i++){term*=((n-i+1)/i);sum+=term;}
+    return sum;
+  };
+  let chosen=null;
+  for(let k=1;k<=Math.floor((n+1)/2);k++){
+    const coverage=1-2*cdf(k-1);
+    if(coverage>=confidence)chosen={rank:k,coverage};
+    else break;
+  }
+  return chosen;
+}
+function lcMedianEstimate(rows){
+  const sorted=rows.map(x=>x.count).sort((a,b)=>a-b);
+  const r=median(sorted),m=solveLeaCoulsonMedian(r);
+  if(m===null)return null;
+  const Ns=rows.map(x=>x.N),meanN=mean(Ns);
+  const ranks=binomialMedianRanks(rows.length);
+  let lower=null,upper=null,coverage=null;
+  if(ranks){
+    const lo=sorted[ranks.rank-1],hi=sorted[sorted.length-ranks.rank];
+    lower=lo>0?solveLeaCoulsonMedian(lo)/meanN:0;
+    upper=hi>0?solveLeaCoulsonMedian(hi)/meanN:null;
+    coverage=ranks.coverage;
+  }
+  return {m,rate:m/meanN,lower,upper,median:r,method:'Lea–Coulson median',coverage,meanN};
+}
+function ldCoefficients(z,maxR){
+  if(Math.abs(z-1)<1e-10){
+    const c=new Array(maxR+1).fill(0);
+    for(let k=1;k<=maxR;k++)c[k]=1/(k*(k+1));
+    return {a0:-1,c};
+  }
+  if(!(z>0&&z<1)||z>0.5)return null;
+  const q=z/(1-z),b=new Array(maxR+1);b[0]=1;
+  for(let k=1;k<=maxR;k++)b[k]=-(1+q)*Math.pow(-q,k-1);
+  const c=new Array(maxR+1).fill(0);
+  for(let k=1;k<=maxR;k++){
+    let convolution=0;
+    for(let j=1;j<=k;j++)convolution-=b[k-j]/j;
+    c[k]=q*(Math.log(z)*b[k]+convolution);
+  }
+  return {a0:q*Math.log(z),c};
+}
+function probabilityForCount(m,coeff,count){
+  if(count===0)return m*coeff.a0;
+  const p=new Array(count+1);
+  p[0]=Math.exp(m*coeff.a0);
+  if(p[0]===0)return -Infinity;
+  for(let r=1;r<=count;r++){
+    let total=0;
+    for(let k=1;k<=r;k++)total+=k*coeff.c[k]*p[r-k];
+    p[r]=(m/r)*total;
+    if(!(p[r]>0)||!Number.isFinite(p[r]))return -Infinity;
+  }
+  return Math.log(p[count]);
+}
+function partialPlatingLogLikelihood(logMu,rows,prepared){
+  const mu=Math.exp(logMu);let ll=0;
+  for(let i=0;i<rows.length;i++){
+    const row=rows[i],m=mu*row.N;
+    const lp=probabilityForCount(m,prepared[i],row.count);
+    if(!Number.isFinite(lp))return -Infinity;
+    ll+=lp;
+  }
+  return ll;
+}
+function optimizePartialPlatingMLE(rows){
+  if(!rows.length)return null;
+  const maxCount=Math.max(...rows.map(x=>x.count));
+  if(maxCount>250)return {error:'The highest observed 5-FOA count is above 250. Use the exported data with mlemur for this dataset; the in-browser likelihood calculation is capped to keep the page responsive.'};
+  const prepared=rows.map(x=>ldCoefficients(x.z,maxCount));
+  if(prepared.some(x=>!x))return {error:'The plated fraction is outside the supported range for the in-browser partial-plating model. Use mlemur for this dataset.'};
+  const loLog=Math.log(1e-14),hiLog=Math.log(1e-2),steps=120;
+  let bestLL=-Infinity,bestIndex=0;
+  const grid=[];
+  for(let i=0;i<=steps;i++){
+    const x=loLog+(hiLog-loLog)*i/steps;
+    const ll=partialPlatingLogLikelihood(x,rows,prepared);
+    grid.push({x,ll});
+    if(ll>bestLL){bestLL=ll;bestIndex=i;}
+  }
+  if(rows.every(x=>x.count===0)){
+    const exposure=rows.reduce((sum,row,i)=>sum-row.N*prepared[i].a0,0);
+    const upper=1.352772/exposure;
+    return {m:0,rate:0,lower:0,upper,median:0,method:'Partial-plating Luria–Delbrück MLE',coverage:null,meanN:mean(rows.map(x=>x.N)),allZero:true};
+  }
+  if(bestIndex===0||bestIndex===steps)return {error:'The maximum-likelihood estimate is outside the calculator search range. Check the culture concentrations and counts, or use mlemur for this dataset.'};
+  let a=grid[bestIndex-1].x,b=grid[bestIndex+1].x;
+  const gr=(Math.sqrt(5)-1)/2;
+  let c=b-gr*(b-a),d=a+gr*(b-a),fc=partialPlatingLogLikelihood(c,rows,prepared),fd=partialPlatingLogLikelihood(d,rows,prepared);
+  for(let i=0;i<90;i++){
+    if(fc>fd){b=d;d=c;fd=fc;c=b-gr*(b-a);fc=partialPlatingLogLikelihood(c,rows,prepared);}
+    else{a=c;c=d;fc=fd;d=a+gr*(b-a);fd=partialPlatingLogLikelihood(d,rows,prepared);}
+  }
+  const bestLog=(a+b)/2,best=partialPlatingLogLikelihood(bestLog,rows,prepared);
+  const cutoff=best-1.920729;
+  function findCross(direction){
+    let inside=bestLog,outside=bestLog,step=.15,found=false;
+    for(let i=0;i<100;i++){
+      outside=bestLog+direction*step;
+      if(outside<loLog||outside>hiLog)outside=Math.max(loLog,Math.min(hiLog,outside));
+      const ll=partialPlatingLogLikelihood(outside,rows,prepared);
+      if(ll<=cutoff){found=true;break;}
+      inside=outside;step*=1.5;
+      if(outside===loLog||outside===hiLog)break;
+    }
+    if(!found)return null;
+    let left=Math.min(inside,outside),right=Math.max(inside,outside);
+    for(let i=0;i<70;i++){
+      const mid=(left+right)/2,ll=partialPlatingLogLikelihood(mid,rows,prepared);
+      if(direction<0){if(ll>cutoff)right=mid;else left=mid;}
+      else{if(ll>cutoff)left=mid;else right=mid;}
+    }
+    return Math.exp((left+right)/2);
+  }
+  const lower=findCross(-1),upper=findCross(1),mu=Math.exp(bestLog),meanN=mean(rows.map(x=>x.N));
+  return {m:mu*meanN,rate:mu,lower,upper,median:median(rows.map(x=>x.count)),method:'Partial-plating Luria–Delbrück MLE',coverage:null,meanN,logLikelihood:best};
 }
 function renderLeaCoulsonResults(){
  const tbody=document.querySelector('#leaResultsTable tbody');const status=document.getElementById('leaCoulsonStatus');
  if(!tbody||!status)return;
  const results=[];let messages=[];
  state.strains.forEach(s=>{
-  const rows=leaInputsForStrain(s);const counts=rows.map(x=>x.count);const med=median(counts);
-  if(rows.length<8){results.push({s,n:rows.length,median:med,result:null,assessment:'Insufficient culture data'});messages.push(`${s.name}: need at least 8 paired cultures with imported concentration and plating data.`);return;}
-  const Ns=rows.map(x=>x.N),zs=rows.map(x=>x.z),meanN=mean(Ns),meanZ=mean(zs);
-  const cv=a=>{const m=mean(a);return m?sd(a)/m:Infinity;};
-  const nCV=cv(Ns),zCV=cv(zs);
-  if(Math.abs(meanZ-1)>0.000001){results.push({s,n:rows.length,median:med,result:null,assessment:'Partial plating: classical LC not applicable'});messages.push(`${s.name}: only ${(meanZ*100).toPrecision(3)}% of the culture is represented on 5-FOA plates. The classical Lea–Coulson median equation does not itself correct for partial plating, so no mutation rate is reported. Use the optional mlemur workflow or a validated partial-plating estimator.`);return;}
-  if(nCV>.05){results.push({s,n:rows.length,median:med,result:null,assessment:'Variable final population size'});messages.push(`${s.name}: final population-size CV is ${(nCV*100).toFixed(1)}%; the single-population-size approximation is not applied.`);return;}
-  if(!(med>0)){results.push({s,n:rows.length,median:med,result:null,assessment:'Median is zero'});messages.push(`${s.name}: median mutant count is zero; the median estimator is not informative for this dataset.`);return;}
-  const r=bootstrapLeaRate(rows,meanN,meanZ);
-  const inRange=med>=2.5&&med<=60;
-  const assess=inRange?'Estimate available; check assumptions':'Outside recommended median-count range';
-  results.push({s,n:rows.length,median:med,result:r,assessment:assess});
-  if(!inRange)messages.push(`${s.name}: median 5-FOA count ${fmt(med,2)} is outside the approximate recommended Lea–Coulson range (2.5–60); treat the estimate as exploratory.`);
+  const rows=leaInputsForStrain(s),counts=rows.map(x=>x.count),med=median(counts);
+  if(rows.length<6){results.push({s,n:rows.length,median:med,result:null,assessment:'Need at least 6 complete cultures'});messages.push(`${s.name}: only ${rows.length} complete culture records are available. Enter paired counts and import the plating data; 12 independent cultures, as in Zaratiegui et al., are preferable.`);return;}
+  const zs=rows.map(x=>x.z),Ns=rows.map(x=>x.N),zMedian=median(zs),zCV=sd(zs)/mean(zs),nCV=sd(Ns)/mean(Ns);
+  let result=null,assessment='';
+  if(zs.every(z=>z>=0.999999)){
+    result=lcMedianEstimate(rows);
+    assessment=result?'Classical Lea–Coulson estimate':'Median count is zero; LC median estimator is not informative';
+    if(med<2.5||med>60)assessment+='; outside the commonly recommended median-count range';
+  }else{
+    result=optimizePartialPlatingMLE(rows);
+    if(result?.error){assessment='Could not fit in browser';messages.push(`${s.name}: ${result.error}`);result=null;}
+    else if(result?.allZero){assessment='All plates are zero; only an upper limit is estimable';messages.push(`${s.name}: all 5-FOA counts are zero. The estimate is zero with a one-sided 95% upper limit; collect more informative cultures or plate a larger fraction if practical.`);}
+    else assessment='Partial-plating-aware maximum likelihood';
+    if(zCV>0.25)assessment+='; plated fractions vary substantially';
+    if(nCV>0.25)assessment+='; final populations vary substantially';
+  }
+  if(zs.some(z=>z>0.5&&z<0.999999)){assessment='Plating fraction outside in-browser model range';result=null;messages.push(`${s.name}: one or more cultures have a plated fraction between 50% and 99.9999%. Use mlemur or adjust the model before interpreting this strain.`);}
+  if(result){
+    result.zMedian=zMedian;result.zCV=zCV;result.nCV=nCV;result.n=rows.length;
+    if(rows.length<12)messages.push(`${s.name}: ${rows.length} cultures entered; Zaratiegui et al. used 12 independent cultures per strain.`);
+    if(zCV>0.25||nCV>0.25)messages.push(`${s.name}: plated fraction CV ${(zCV*100).toFixed(1)}% and final population CV ${(nCV*100).toFixed(1)}%. The partial-plating likelihood uses each culture's own values, but substantial heterogeneity should be reviewed.`);
+  }
+  results.push({s,n:rows.length,median:med,result,assessment});
  });
- tbody.innerHTML=results.map(x=>`<tr><td>${esc(x.s.name)}</td><td>${x.n}</td><td>${x.median===null?'—':fmt(x.median,2)}</td><td>${x.result?fmtSci(x.result.rate):'—'}</td><td>${x.result&&x.result.lower!==null&&x.result.upper!==null?fmtSci(x.result.lower)+' – '+fmtSci(x.result.upper):'—'}</td><td>${esc(x.assessment)}</td></tr>`).join('')||'<tr><td colspan="6">No strains entered.</td></tr>';
- status.textContent=messages.length?messages.join(' '):'Lea–Coulson estimates are available for the entered strains. The 95% intervals are culture-level bootstrap intervals and should be treated as approximate. Confirm the assumptions before interpreting the estimates.';
+ tbody.innerHTML=results.map(x=>{
+   const r=x.result;
+   const ci=r?(r.lower!==null&&r.upper!==null?fmtSci(r.lower)+' – '+fmtSci(r.upper):'Not estimable'):'—';
+   return `<tr><td>${esc(x.s.name)}</td><td>${x.n}</td><td>${x.median===null?'—':fmt(x.median,2)}</td><td>${r?fmt(r.zMedian*100,4)+'%':'—'}</td><td>${r?esc(r.method):'—'}</td><td>${r?fmtSci(r.m):'—'}</td><td>${r?fmtSci(r.rate):'—'}</td><td>${ci}</td><td>${esc(x.assessment)}</td></tr>`;
+ }).join('')||'<tr><td colspan="9">No strains entered.</td></tr>';
+ status.textContent=messages.length?messages.join(' '):'Analysis complete. Full-culture data use the Lea–Coulson median estimator; partial-plating data use a Luria–Delbrück likelihood that explicitly accounts for the plated fraction. Check the assumptions and the 95% interval before interpreting the result.';
  drawLeaGraph(results.filter(x=>x.result&&x.result.rate>0));
  state.leaResults={};results.forEach(x=>{if(x.result)state.leaResults[x.s.id]={...x.result,n:x.n,median:x.median,assessment:x.assessment};});
 }
 function drawLeaGraph(rows){
  const svg=document.getElementById('leaMutationRateGraph');if(!svg)return;
- if(!rows.length){svg.innerHTML='<text x="450" y="180" text-anchor="middle" fill="#777" font-size="15">A Lea–Coulson estimate will appear when culture size and plated fraction are sufficiently similar.</text>';return;}
+ if(!rows.length){svg.innerHTML='<text x="450" y="180" text-anchor="middle" fill="#777" font-size="15">A mutation-rate estimate will appear when enough complete culture data are entered.</text>';return;}
  const vals=rows.flatMap(x=>[x.result.lower,x.result.rate,x.result.upper]).filter(v=>v>0&&Number.isFinite(v));
  if(!vals.length){svg.innerHTML='<text x="450" y="180" text-anchor="middle" fill="#777">Positive estimates are required for the logarithmic axis.</text>';return;}
- const W=900,H=360,left=95,right=35,top=30,bottom=75,plotW=W-left-right,plotH=H-top-bottom;
  let lo=Math.floor(Math.log10(Math.min(...vals))),hi=Math.ceil(Math.log10(Math.max(...vals)));if(lo===hi)hi=lo+1;
+ const W=900,H=360,left=95,right=35,top=30,bottom=75,plotW=W-left-right,plotH=H-top-bottom;
  const y=v=>top+(hi-Math.log10(v))/(hi-lo)*plotH;let out='';
  for(let e=lo;e<=hi;e++){const yy=y(Math.pow(10,e));out+=`<line x1="${left}" y1="${yy}" x2="${W-right}" y2="${yy}" stroke="#e3e3e3"/><text x="${left-12}" y="${yy+4}" text-anchor="end" font-size="11" fill="#555">10^${e}</text>`;}
  const step=plotW/rows.length;rows.forEach((x,i)=>{const xx=left+step*(i+.5),r=x.result;if(r.lower>0&&r.upper>0)out+=`<line x1="${xx}" y1="${y(r.lower)}" x2="${xx}" y2="${y(r.upper)}" stroke="#52705d" stroke-width="3"/><line x1="${xx-8}" y1="${y(r.lower)}" x2="${xx+8}" y2="${y(r.lower)}" stroke="#52705d"/><line x1="${xx-8}" y1="${y(r.upper)}" x2="${xx+8}" y2="${y(r.upper)}" stroke="#52705d"/>`;out+=`<circle cx="${xx}" cy="${y(r.rate)}" r="6" fill="#78AA8A" stroke="#355744"/><text x="${xx}" y="${H-38}" text-anchor="middle" font-size="12" fill="#333">${esc(x.s.name).slice(0,18)}</text>`;});
@@ -794,8 +928,8 @@ function drawMlemurGraph(rows){
  out+=`<text x="${W/2}" y="${H-10}" text-anchor="middle" font-size="12" fill="#555">Strain</text><text transform="translate(20 ${H/2}) rotate(-90)" text-anchor="middle" font-size="12" fill="#555">Mutation rate (per cell division; log scale)</text>`;svg.innerHTML=out;
 }
 function exportMlemurCSV(){
- const lines=[['Strain','Culture','YES colonies','5FOA colonies','Viable concentration (cells/mL)','Culture volume (mL)','YES dilution factor','YES plating volume (uL)','5FOA dilution factor','5FOA plating volume (uL)','YES target cells','5FOA target cells'].join(',')];
- state.strains.forEach(s=>{const n=Math.max(s.yes.length,s.foa.length,(s.imported||[]).length);for(let i=0;i<n;i++){const x=s.imported?.[i]||{};const vals=[s.name,i+1,s.yes[i]??'',s.foa[i]??'',s.concentration?.[i]??x.concentration??'',s.cultureVolumeMl||20,x.yes?.dilutionFactor??'',x.yes?.platingVolumeUl??'',x.foa?.dilutionFactor??'',x.foa?.platingVolumeUl??'',s.yesPlated?.[i]??100,s.foaPlated?.[i]??100000];lines.push(vals.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','));}});
+ const lines=[['Strain','Culture','YES colonies','5FOA colonies','Measured total cell concentration (cells/mL)','Culture volume (mL)','YES dilution factor','YES plating volume (uL)','5FOA dilution factor','5FOA plating volume (uL)','YES target cells','5FOA target cells','YES survival fraction','Final viable population N_t','5FOA fraction of culture'].join(',')];
+ state.strains.forEach(s=>{const n=Math.max(s.yes.length,s.foa.length,(s.imported||[]).length);for(let i=0;i<n;i++){const x=s.imported?.[i]||{};const vals=[s.name,i+1,s.yes[i]??'',s.foa[i]??'',s.concentration?.[i]??x.concentration??'',s.cultureVolumeMl||20,x.yes?.dilutionFactor??'',x.yes?.platingVolumeUl??'',x.foa?.dilutionFactor??'',x.foa?.platingVolumeUl??'',s.yesPlated?.[i]??100,s.foaPlated?.[i]??100000,(Number(s.yes?.[i])/(s.yesPlated?.[i]??100)),(Number(s.concentration?.[i]??x.concentration)*Number(s.cultureVolumeMl||20)*(Number(s.yes?.[i])/(s.yesPlated?.[i]??100))),(s.foaPlated?.[i]??100000)/(Number(s.concentration?.[i]??x.concentration)*Number(s.cultureVolumeMl||20))];lines.push(vals.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','));}});
  const blob=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ura4-mlemur-input-data.csv';a.click();URL.revokeObjectURL(a.href);document.getElementById('mlemurExportStatus').textContent='CSV downloaded. Use it as a per-culture data reference when entering the assay in mlemur; it is not a native mlemur project file.';
 }
 document.getElementById('downloadMlemurData').addEventListener('click',exportMlemurCSV);
@@ -828,91 +962,79 @@ document.getElementById("downloadButton").addEventListener("click",async()=>{
     alert("The Excel export library could not be loaded. Please check your internet connection and try again.");
     return;
   }
-
   const wb=XLSX.utils.book_new();
-
   const summaryRows=[
-    ["Strain","n","Mean ura4-loss frequency (%)","SD","SEM","Eviction %","Conversion %"]
+    ["Strain","n","Median ura4-loss frequency (%)","Median 95% CI lower","Median 95% CI upper","Mean frequency (%)","SD","SEM","Eviction %","Conversion %"]
   ];
-
   state.strains.forEach(s=>{
-    const vals=strainFrequencies(s), m=mean(vals), d=sd(vals), se=sem(vals);
+    const vals=strainFrequencies(s), stats=medianCI(vals), m=mean(vals), d=sd(vals), se=sem(vals);
     const e=s.eviction===""?null:Number(s.eviction);
     const c=s.conversion===""?null:Number(s.conversion);
     const total=Number.isFinite(e)&&Number.isFinite(c)?e+c:null;
-    summaryRows.push([
-      s.name, vals.length, m, d, se,
-      total>0?e/total*100:null,
-      total>0?c/total*100:null
-    ]);
+    summaryRows.push([s.name,vals.length,stats.median,stats.lower,stats.upper,m,d,se,total>0?e/total*100:null,total>0?c/total*100:null]);
   });
-
   const wsSummary=XLSX.utils.aoa_to_sheet(summaryRows);
-  wsSummary["!cols"]=[{wch:22},{wch:8},{wch:25},{wch:16},{wch:16},{wch:15},{wch:17}];
+  wsSummary["!cols"]=[{wch:22},{wch:8},{wch:30},{wch:22},{wch:22},{wch:20},{wch:16},{wch:16},{wch:15},{wch:17}];
   XLSX.utils.book_append_sheet(wb,wsSummary,"Summary");
-
   const measurementRows=[
-    ["Strain","Colony","YES colonies","YES + 5-FOA colonies","Survival","Corrected 5-FOA colonies","Ura4 loss frequency (%)"]
+    ["Strain","Culture","YES colonies","YES + 5-FOA colonies","YES cells represented","5-FOA cells represented","YES colony fraction","5-FOA colony fraction","Ura4-resistant frequency (%)"]
   ];
   state.strains.forEach(s=>{
     const n=Math.max(s.yes.length,s.foa.length);
     for(let i=0;i<n;i++){
-      const y=s.yes[i], f=s.foa[i];
-      const survival=Number.isFinite(y)&&y>0?y/100:null;
-      const corrected=Number.isFinite(y)&&y>0&&Number.isFinite(f)?f/survival:null;
-      const freq=Number.isFinite(corrected)?corrected/100000*100:null;
-      measurementRows.push([s.name,i+1,y,f,survival,corrected,freq]);
+      const y=s.yes[i],f=s.foa[i];
+      const yesTarget=s.yesPlated?.[i]??100,foaTarget=s.foaPlated?.[i]??100000;
+      const yesFraction=Number.isFinite(y)&&yesTarget>0?y/yesTarget:null;
+      const foaFraction=Number.isFinite(f)&&foaTarget>0?f/foaTarget:null;
+      const freq=Number.isFinite(yesFraction)&&yesFraction>0&&Number.isFinite(foaFraction)?foaFraction/yesFraction*100:null;
+      measurementRows.push([s.name,i+1,y,f,yesTarget,foaTarget,yesFraction,foaFraction,freq]);
     }
   });
   const wsMeasurements=XLSX.utils.aoa_to_sheet(measurementRows);
-  wsMeasurements["!cols"]=[{wch:22},{wch:10},{wch:16},{wch:25},{wch:14},{wch:28},{wch:25}];
+  wsMeasurements["!cols"]=[{wch:22},{wch:10},{wch:16},{wch:25},{wch:22},{wch:22},{wch:20},{wch:22},{wch:25}];
   XLSX.utils.book_append_sheet(wb,wsMeasurements,"Individual measurements");
-
   const comparisonRows=[
-    ["Control / reference","Strain compared","Control n","Test n","Control mean (%)","Test mean (%)","Control SD","Test SD","Welch t statistic","Degrees of freedom","p-value"]
+    ["Control / reference","Strain compared","Control n","Test n","Control median (%)","Test median (%)","Mann-Whitney U","Raw p-value","Bonferroni-adjusted p-value"]
   ];
   state.comparisons.forEach(c=>{
-    const a=state.strains.find(s=>s.id===c.control), b=state.strains.find(s=>s.id===c.test);
-    const ra=a?strainFrequencies(a):[], rb=b?strainFrequencies(b):[];
-    const r=a&&b?welch(ra,rb):null;
-    comparisonRows.push([
-      a?a.name:"", b?b.name:"",
-      r?r.nA:null,r?r.nB:null,r?r.meanA:null,r?r.meanB:null,
-      r?r.sdA:null,r?r.sdB:null,r?r.t:null,r?r.df:null,r?r.p:null
-    ]);
+    const a=state.strains.find(s=>s.id===c.control),b=state.strains.find(s=>s.id===c.test);
+    const ra=a?strainFrequencies(a):[],rb=b?strainFrequencies(b):[];
+    const r=a&&b?mannWhitney(ra,rb,state.comparisons.length):null;
+    comparisonRows.push([a?a.name:"",b?b.name:"",r?r.nA:null,r?r.nB:null,r?r.medianA:null,r?r.medianB:null,r?r.U:null,r?r.rawP:null,r?r.p:null]);
   });
   const wsComp=XLSX.utils.aoa_to_sheet(comparisonRows);
-  wsComp["!cols"]=[{wch:22},{wch:22},{wch:12},{wch:10},{wch:20},{wch:18},{wch:14},{wch:14},{wch:18},{wch:20},{wch:12}];
+  wsComp["!cols"]=[{wch:22},{wch:22},{wch:12},{wch:10},{wch:22},{wch:22},{wch:18},{wch:18},{wch:28}];
   XLSX.utils.book_append_sheet(wb,wsComp,"Statistical comparisons");
-
   const charRows=[["Strain","Eviction colonies","Conversion colonies","Total","Eviction %","Conversion %"]];
   state.strains.forEach(s=>{
-    const e=s.eviction===""?null:Number(s.eviction), c=s.conversion===""?null:Number(s.conversion);
+    const e=s.eviction===""?null:Number(s.eviction),c=s.conversion===""?null:Number(s.conversion);
     const total=Number.isFinite(e)&&Number.isFinite(c)?e+c:null;
     charRows.push([s.name,e,c,total,total>0?e/total*100:null,total>0?c/total*100:null]);
   });
   const wsChar=XLSX.utils.aoa_to_sheet(charRows);
   wsChar["!cols"]=[{wch:22},{wch:20},{wch:20},{wch:12},{wch:15},{wch:17}];
   XLSX.utils.book_append_sheet(wb,wsChar,"Eviction conversion");
-
-  const leaRows=[["Strain","Independent cultures","Median 5-FOA colonies","Lea-Coulson mutation rate per cell division","Approx. bootstrap 95% CI lower","Approx. bootstrap 95% CI upper","Assessment"]];
-  state.strains.forEach(s=>{const r=state.leaResults[s.id]||{};leaRows.push([s.name,r.n??Math.min(s.yes.length,s.foa.length),r.median??null,r.rate??null,r.lower??null,r.upper??null,r.assessment||"Not estimated / assumptions not met"]);});
-  const wsLea=XLSX.utils.aoa_to_sheet(leaRows);wsLea["!cols"]=[{wch:22},{wch:20},{wch:22},{wch:38},{wch:28},{wch:28},{wch:45}];XLSX.utils.book_append_sheet(wb,wsLea,"Mutation rate (Lea-Coulson)");
-
+  const leaRows=[["Strain","Independent cultures","Median 5-FOA colonies","Median fraction plated","Mean final viable population N_t","Estimator","m (events/culture)","Mutation rate per cell division","95% CI lower","95% CI upper","Assessment"]];
+  state.strains.forEach(s=>{const r=state.leaResults[s.id]||{};leaRows.push([s.name,r.n??Math.min(s.yes.length,s.foa.length),r.median??null,r.zMedian??null,r.meanN??null,r.method||"",r.m??null,r.rate??null,r.lower??null,r.upper??null,r.assessment||"Not estimated / assumptions not met"]);});
+  const wsLea=XLSX.utils.aoa_to_sheet(leaRows);
+  wsLea["!cols"]=[{wch:22},{wch:20},{wch:22},{wch:22},{wch:28},{wch:40},{wch:20},{wch:30},{wch:18},{wch:18},{wch:55}];
+  XLSX.utils.book_append_sheet(wb,wsLea,"Fluctuation analysis");
   const mleRows=[["Strain","Independent cultures","Mutation rate per cell division","95% CI lower","95% CI upper","Model / notes"]];
   state.strains.forEach(s=>{const r=state.mlemurResults[s.id]||{};mleRows.push([s.name,Math.min(s.yes.length,s.foa.length),r.rate??null,r.lower??null,r.upper??null,r.model||""]);});
-  const wsMle=XLSX.utils.aoa_to_sheet(mleRows);wsMle["!cols"]=[{wch:22},{wch:20},{wch:30},{wch:18},{wch:18},{wch:35}];XLSX.utils.book_append_sheet(wb,wsMle,"Mutation rate (mlemur)");
-  const mleGraphRows=[["Strain","Mutation rate","95% CI lower","95% CI upper"]];state.strains.forEach(s=>{const r=state.mlemurResults[s.id]||{};mleGraphRows.push([s.name,r.rate??null,r.lower??null,r.upper??null]);});const wsMleGraph=XLSX.utils.aoa_to_sheet(mleGraphRows);XLSX.utils.book_append_sheet(wb,wsMleGraph,"Mutation-rate graph data");
+  const wsMle=XLSX.utils.aoa_to_sheet(mleRows);
+  wsMle["!cols"]=[{wch:22},{wch:20},{wch:30},{wch:18},{wch:18},{wch:35}];
+  XLSX.utils.book_append_sheet(wb,wsMle,"Mutation rate (mlemur)");
+  const mleGraphRows=[["Strain","Mutation rate","95% CI lower","95% CI upper"]];
+  state.strains.forEach(s=>{const r=state.mlemurResults[s.id]||{};mleGraphRows.push([s.name,r.rate??null,r.lower??null,r.upper??null]);});
+  const wsMleGraph=XLSX.utils.aoa_to_sheet(mleGraphRows);
+  XLSX.utils.book_append_sheet(wb,wsMleGraph,"Mutation-rate graph data");
   XLSX.writeFile(wb,"ura4-loss-frequency-results.xlsx");
 });
-
-// Start with one strain. No hidden dependency on any other section.
 state.strains.push(newStrain());
 renderAll();
 renderMlemurInputs();
 renderMlemurResults();
 renderLeaCoulsonResults();
-
 })();
 </script>
 </body>
