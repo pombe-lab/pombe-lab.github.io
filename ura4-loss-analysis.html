@@ -48,11 +48,14 @@ th{background:#d9e5dc}
 .characterization-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:9px;align-items:end}
 .back{display:block;text-align:center;margin-top:35px;color:#52705d;text-decoration:none;font-size:16px}
 .back:hover{text-decoration:underline}
+.references{padding-left:20px;margin:8px 0}.references li{margin:0 0 10px;line-height:1.5;text-align:left}.references a{color:#52705d;overflow-wrap:anywhere}.reference-note{font-size:12px;color:#666;line-height:1.5}
 
 .graph-card{background:#fff;border:1px solid #d8d8d8;border-radius:13px;padding:18px;margin:14px 0}
 .graph-wrap{width:100%;overflow-x:auto}
 #frequencyGraph{display:block;width:100%;min-width:620px;height:390px}
 .graph-empty{padding:55px 20px;text-align:center;color:#777;font-size:13px}
+#mlemurResultsTable,#leaResultsTable{min-width:760px}#mutationRateGraph,#leaMutationRateGraph{display:block;width:100%;min-width:620px;height:360px}
+details.optional-analysis{background:#f4f4f4;border-radius:15px;padding:18px 20px;margin:15px 0;box-shadow:0 3px 8px rgba(0,0,0,.09)}details.optional-analysis>summary{cursor:pointer;font-family:Georgia,serif;color:#52705d;font-size:20px;font-weight:bold;list-style:none}details.optional-analysis>summary::-webkit-details-marker{display:none}details.optional-analysis>summary:after{content:"＋";float:right;font-family:Arial,sans-serif;font-size:17px}details.optional-analysis[open]>summary:after{content:"−"}details.optional-analysis .inner{padding-top:12px}
 .legend{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin-top:8px;font-size:12px;color:#555}
 .legend-item{display:flex;align-items:center;gap:6px}
 .legend-box{width:13px;height:13px;border-radius:2px;border:1px solid #bbb}
@@ -78,11 +81,15 @@ th{background:#d9e5dc}
 <p class="help"><strong>1. Survival:</strong> YES colonies / 100</p>
 <p class="help"><strong>2. Survival-corrected 5-FOA colonies:</strong> 5-FOA colonies / survival</p>
 <p class="help"><strong>3. Ura4 loss frequency:</strong> survival-corrected 5-FOA colonies / 100,000 × 100</p>
+<p class="help"><strong>Lea–Coulson method of the median:</strong> estimates the number of mutation events per culture from the median number of resistant colonies across independent cultures. The calculator then converts this to a mutation rate using the final population size and, when the cultures have sufficiently similar sampling fractions and population sizes, a partial-plating correction. This is a separate mutation-rate analysis; it is not the median ura4-loss frequency reported by Zaratiegui et al. (2011).</p>
 <p class="help">The <strong>Eviction / Conversion Characterization</strong> is calculated separately and describes the composition of the ura4-loss events; it does not affect the ura4 loss frequency or the statistical comparisons.</p>
 </div>
 
 <h2>COLONY COUNT INPUT</h2>
 <div class="card">
+<div class="fast-note" id="transferNotice">Plating data can be transferred from the plating calculator. Use “Send to ura4-loss calculator” on that page, then import them here.</div>
+<div class="button-row"><button type="button" class="secondary" id="importPlatingButton">Import plating data</button></div>
+<div class="help" id="importStatus" aria-live="polite"></div>
 <p class="help">Paste one count per line into each box. The YES and 5-FOA lists must contain the same number of values. <strong>0 is a valid measurement.</strong></p>
 <div id="strains"></div>
 <div class="button-row">
@@ -95,6 +102,37 @@ th{background:#d9e5dc}
 <div id="summary"></div>
 </div>
 
+
+<h2>MUTATION-RATE ANALYSIS</h2>
+<div class="card">
+<h3>Lea–Coulson method of the median</h3>
+<p class="help">This is the standard, built-in mutation-rate estimate. It uses the distribution of 5-FOA-resistant colony counts across independent cultures. The classical Lea–Coulson median equation is not, by itself, a partial-plating correction. Because your assay plates only a fraction of each culture, this calculator will only convert the classical estimate into a mutation rate when essentially the complete culture is represented. For your usual partial-plating design, use the optional mlemur workflow or a validated partial-plating estimator; the calculator will not apply an unsupported correction.</p>
+<div id="leaCoulsonStatus" class="fast-note" aria-live="polite">Import plating data and enter paired colony counts to evaluate whether Lea–Coulson assumptions are met.</div>
+<div class="table-wrap"><table id="leaResultsTable"><thead><tr><th>Strain</th><th>Independent cultures</th><th>Median 5-FOA colonies</th><th>Estimated mutation rate</th><th>Approx. 95% bootstrap CI</th><th>Assessment</th></tr></thead><tbody><tr><td colspan="6" class="empty">Enter culture data to calculate.</td></tr></tbody></table></div>
+<div class="graph-card"><div class="graph-wrap"><svg id="leaMutationRateGraph" viewBox="0 0 900 360" role="img" aria-label="Lea Coulson mutation rate estimates with bootstrap confidence intervals"></svg></div></div>
+</div>
+<details class="optional-analysis">
+<summary>Optional analysis: mlemur (maximum-likelihood method)</summary>
+<div class="inner">
+<p class="help"><strong>mlemur:</strong> mlemur (MLE MUtation Rate calculator) uses maximum-likelihood methods to estimate mutation rates from the distribution of mutant counts across independent cultures. Unlike the classical Lea–Coulson method of the median, it can model several features that may affect fluctuation assays, including partial plating, cell death, phenotypic lag, variation in final population size and mutations arising after the exponential-growth phase. The model must be selected to match the experiment; these options should not be enabled automatically without supporting experimental information.</p>
+<p class="help">For this assay, each of the 12 cultures is an independent lineage started from a separate colony, grown overnight, refreshed separately and then plated. The 5-FOA colony counts, viable-cell measurements and actual plated fractions are therefore needed for each culture. A single-cell population estimate or a simple correction of colony counts by the plated fraction is not a substitute for the partial-plating likelihood model.</p>
+<p class="help"><strong>Important:</strong> This browser calculator does not reproduce the mlemur likelihood engine. It prepares the per-culture data for analysis in the published mlemur software and lets you record the resulting mutation-rate estimates and confidence intervals here. This avoids presenting an unvalidated in-browser approximation as an mlemur result.</p>
+<div class="button-row"><button type="button" class="secondary" id="downloadMlemurData">Download per-culture data for mlemur (CSV)</button><button type="button" class="secondary" id="openMlemur">Open mlemur instructions</button></div>
+<p class="help" id="mlemurExportStatus" aria-live="polite">Enter colony counts and import plating data before exporting the analysis dataset.</p>
+</div>
+<div class="card">
+<h3>Import mlemur results</h3>
+<p class="help">After analysing your strains in mlemur, prepare a CSV with one row per strain and the columns <strong>Strain, Mutation_rate, CI_lower, CI_upper, Model_notes</strong>. You can download a pre-filled template below. Importing the completed CSV updates the results table and graph for the current experiment. You can still enter or edit results manually below.</p>
+<div class="button-row"><button type="button" class="secondary" id="downloadMlemurTemplate">Download results CSV template</button><label class="secondary" for="mlemurResultsFile" style="display:inline-flex;align-items:center;border-radius:8px;padding:9px 13px;cursor:pointer;font-size:12px;font-weight:bold">Import completed results CSV</label><input type="file" id="mlemurResultsFile" accept=".csv,text/csv" style="display:none"></div>
+<p class="help" id="mlemurImportStatus" aria-live="polite">No mlemur results file imported yet.</p>
+<div id="mlemurInputs"></div>
+</div>
+<div class="card">
+<h3>Mutation-rate results</h3>
+<div class="table-wrap"><table id="mlemurResultsTable"><thead><tr><th>Strain</th><th>Independent cultures</th><th>Mutation rate (per cell division)</th><th>95% CI lower</th><th>95% CI upper</th><th>Model / notes</th></tr></thead><tbody><tr><td colspan="6" class="empty">Enter mlemur results above.</td></tr></tbody></table></div>
+<div class="graph-card"><div class="graph-wrap"><svg id="mutationRateGraph" viewBox="0 0 900 360" role="img" aria-label="mlemur mutation rate estimates with 95 percent confidence intervals"></svg></div></div>
+</div>
+</details>
 
 <h2>STATISTICAL COMPARISONS</h2>
 <div class="card">
@@ -130,6 +168,20 @@ th{background:#d9e5dc}
 <button type="button" class="primary" id="downloadButton">Download results as Excel</button>
 </div>
 
+<h2>REFERENCES</h2>
+<div class="card">
+<ol class="references">
+<li><strong>Zaratiegui, M., Vaughn, M. W., Irvine, D. V., Goto, D., Watt, S., Bähler, J., Arcangioli, B. &amp; Martienssen, R. A. (2011).</strong> CENP-B preserves genome integrity at replication forks paused by retrotransposon LTR. <em>Nature</em> 469, 112–115. <a href="https://doi.org/10.1038/nature09608" target="_blank" rel="noopener">https://doi.org/10.1038/nature09608</a>.</li>
+<li><strong>Luria, S. E. &amp; Delbrück, M. (1943).</strong> Mutations of bacteria from virus sensitivity to virus resistance. <em>Genetics</em> 28(6), 491–511. <a href="https://doi.org/10.1093/genetics/28.6.491" target="_blank" rel="noopener">https://doi.org/10.1093/genetics/28.6.491</a>.</li>
+<li><strong>Lea, D. E. &amp; Coulson, C. A. (1949).</strong> The distribution of the numbers of mutants in bacterial populations. <em>Journal of Genetics</em> 49, 264–285. <a href="https://doi.org/10.1007/BF02986080" target="_blank" rel="noopener">https://doi.org/10.1007/BF02986080</a>.</li>
+<li><strong>Rosche, W. A. &amp; Foster, P. L. (2000).</strong> Determining mutation rates in bacterial populations. <em>Methods</em> 20(1), 4–17. <a href="https://doi.org/10.1006/meth.1999.0901" target="_blank" rel="noopener">https://doi.org/10.1006/meth.1999.0901</a>.</li>
+<li><strong>Foster, P. L. (2006).</strong> Methods for determining spontaneous mutation rates. <em>Methods in Enzymology</em> 409, 195–213. <a href="https://doi.org/10.1016/S0076-6879(05)09012-9" target="_blank" rel="noopener">https://doi.org/10.1016/S0076-6879(05)09012-9</a>.</li>
+<li><strong>Łazowski, K. (2023).</strong> Efficient, robust, and versatile fluctuation data analysis using MLE MUtation Rate calculator (mlemur). <em>Mutation Research/Fundamental and Molecular Mechanisms of Mutagenesis</em> 826, 111816. <a href="https://doi.org/10.1016/j.mrfmmm.2023.111816" target="_blank" rel="noopener">https://doi.org/10.1016/j.mrfmmm.2023.111816</a>.</li>
+<li><strong>Zheng, Q. (2017).</strong> rSalvador: An R Package for the Fluctuation Experiment. <em>G3: Genes, Genomes, Genetics</em> 7(12), 3849–3856. <a href="https://doi.org/10.1534/g3.117.300120" target="_blank" rel="noopener">https://doi.org/10.1534/g3.117.300120</a>.</li>
+</ol>
+
+</div>
+
 <a class="back" href="calculations.html">← Back to calculations</a>
 </div>
 
@@ -140,13 +192,15 @@ th{background:#d9e5dc}
 
 const state={
   strains:[],
-  comparisons:[]
+  comparisons:[],
+  mlemurResults:{},
+  leaResults:{}
 };
 
 let nextId=1;
 
 function newStrain(){
-  return {id:"s"+(nextId++),name:"Strain "+(state.strains.length+1),yes:[],foa:[],eviction:"",conversion:""};
+  return {id:"s"+(nextId++),name:"Strain "+(state.strains.length+1),yes:[],foa:[],eviction:"",conversion:"",imported:[],concentration:[],yesPlated:[],foaPlated:[],cultureVolumeMl:20};
 }
 function newComparison(){
   return {id:"c"+(nextId++),control:"",test:""};
@@ -176,17 +230,17 @@ function fmtSci(v){
 function parsePaste(text){
   return text.trim().split(/\s+/).filter(Boolean).map(v=>Number(v.replace(/,/g,""))).filter(Number.isFinite);
 }
-function frequency(yes,foa){
-  if(!Number.isFinite(yes)||!Number.isFinite(foa)||yes<=0)return null;
-  const survival=yes/100;
-  const corrected=foa/survival;
-  return corrected/100000*100;
+function frequency(yes,foa,yesPlated=100,foaPlated=100000){
+  if(!Number.isFinite(yes)||!Number.isFinite(foa)||!Number.isFinite(yesPlated)||!Number.isFinite(foaPlated)||yes<=0||yesPlated<=0||foaPlated<=0)return null;
+  const yesSurvival=yes/yesPlated;
+  const foaFraction=foa/foaPlated;
+  return (foaFraction/yesSurvival)*100;
 }
 function strainFrequencies(s){
   const n=Math.min(s.yes.length,s.foa.length);
   const out=[];
   for(let i=0;i<n;i++){
-    const f=frequency(s.yes[i],s.foa[i]);
+    const f=frequency(s.yes[i],s.foa[i],s.yesPlated?.[i]??100,s.foaPlated?.[i]??100000);
     if(Number.isFinite(f))out.push(f);
   }
   return out;
@@ -306,6 +360,8 @@ function renderStrains(){
       renderSummary();
       renderFrequencyGraph();
       renderComparisons();
+      renderMlemurResults();
+      renderLeaCoulsonResults();
     });
   });
 
@@ -329,7 +385,7 @@ function renderTablesOnly(){
     if(!n){box.innerHTML="";return;}
     let rows="";
     for(let i=0;i<n;i++){
-      const y=s.yes[i],f=s.foa[i],freq=frequency(y,f);
+      const y=s.yes[i],f=s.foa[i],freq=frequency(y,f,s.yesPlated?.[i]??100,s.foaPlated?.[i]??100000);
       rows+=`<tr>
         <td>${i+1}</td>
         <td><input class="cell-edit" data-id="${s.id}" data-index="${i}" data-type="yes" type="number" min="0" step="1" value="${Number.isFinite(y)?y:""}"></td>
@@ -351,10 +407,10 @@ function renderTablesOnly(){
         const row=el.closest("tr");
         if(row){
           const y=s.yes[i], f=s.foa[i];
-          const freq=frequency(y,f);
+          const freq=frequency(y,f,s.yesPlated?.[i]??100,s.foaPlated?.[i]??100000);
           row.cells[3].textContent=Number.isFinite(y)&&y>0&&Number.isFinite(f)?fmtSci(freq):"—";
         }
-        renderSummary();renderFrequencyGraph();renderComparisons();
+        renderSummary();renderFrequencyGraph();renderComparisons();renderLeaCoulsonResults();
       });
     });
   });
@@ -465,6 +521,9 @@ function renderAll(){
   renderComparisons();
   renderCharacterization();
   renderFrequencyGraph();
+  renderMlemurInputs();
+  renderMlemurResults();
+  renderLeaCoulsonResults();
 }
 
 document.getElementById("addStrainButton").addEventListener("click",()=>{
@@ -569,6 +628,201 @@ function buildExcelChartSheet(wb,rows){
   return ws;
 }
 
+function median(values){
+ const a=values.slice().sort((x,y)=>x-y);if(!a.length)return null;
+ const m=Math.floor(a.length/2);return a.length%2?a[m]:(a[m-1]+a[m])/2;
+}
+function solveLeaCoulsonMedian(r){
+ if(!(r>0))return null;
+ let lo=1e-12,hi=1;
+ const fn=m=>m*(1.24+Math.log(m));
+ while(fn(hi)<r&&hi<1e12)hi*=2;
+ for(let i=0;i<120;i++){const mid=(lo+hi)/2;if(fn(mid)<r)lo=mid;else hi=mid;}
+ return (lo+hi)/2;
+}
+function leaInputsForStrain(s){
+ const n=Math.min(s.yes.length,s.foa.length,(s.imported||[]).length);
+ const rows=[];
+ for(let i=0;i<n;i++){
+  const conc=Number(s.concentration?.[i]??s.imported?.[i]?.concentration);
+  const vol=Number(s.cultureVolumeMl||20);
+  const plated=Number(s.foaPlated?.[i]??s.imported?.[i]?.foa?.target);
+  const count=Number(s.foa[i]);
+  if(Number.isFinite(count)&&count>=0&&Number.isFinite(conc)&&conc>0&&Number.isFinite(vol)&&vol>0&&Number.isFinite(plated)&&plated>0){
+   const N=conc*vol; // final total cells per culture
+   const z=plated/(conc*vol*1000); // fraction of total cells represented on 5-FOA
+   if(z>0&&z<=1)rows.push({count,N,z});
+  }
+ }
+ return rows;
+}
+function bootstrapLeaRate(rows,meanN,meanZ,iterations=2500){
+ const counts=rows.map(x=>x.count),med=median(counts),mSample=solveLeaCoulsonMedian(med);
+ if(mSample===null)return null;
+ // Classical Lea–Coulson median estimator assumes the mutant distribution is observed without partial-plating thinning.
+ // Do not apply an unvalidated partial-plating correction to this estimator.
+ if(Math.abs(meanZ-1)>0.000001)return null;
+ const mFull=mSample;
+ const rate=mFull/meanN;
+ // Non-parametric culture-level bootstrap; approximate interval, not an exact likelihood CI.
+ let seed=314159;const rand=()=>{seed=(seed*48271)%2147483647;return seed/2147483647;};
+ const boot=[];
+ for(let b=0;b<iterations;b++){
+  const sample=[];for(let j=0;j<counts.length;j++)sample.push(counts[Math.floor(rand()*counts.length)]);
+  const mm=solveLeaCoulsonMedian(median(sample));if(mm===null)continue;
+  const corrected=mm;
+  if(corrected>0&&Number.isFinite(corrected))boot.push(corrected/meanN);
+ }
+ boot.sort((a,b)=>a-b);
+ const q=p=>boot.length?boot[Math.min(boot.length-1,Math.floor(p*(boot.length-1)))]:null;
+ return {rate,lower:q(.025),upper:q(.975),median:med,mSample,mFull};
+}
+function renderLeaCoulsonResults(){
+ const tbody=document.querySelector('#leaResultsTable tbody');const status=document.getElementById('leaCoulsonStatus');
+ if(!tbody||!status)return;
+ const results=[];let messages=[];
+ state.strains.forEach(s=>{
+  const rows=leaInputsForStrain(s);const counts=rows.map(x=>x.count);const med=median(counts);
+  if(rows.length<8){results.push({s,n:rows.length,median:med,result:null,assessment:'Insufficient culture data'});messages.push(`${s.name}: need at least 8 paired cultures with imported concentration and plating data.`);return;}
+  const Ns=rows.map(x=>x.N),zs=rows.map(x=>x.z),meanN=mean(Ns),meanZ=mean(zs);
+  const cv=a=>{const m=mean(a);return m?sd(a)/m:Infinity;};
+  const nCV=cv(Ns),zCV=cv(zs);
+  if(Math.abs(meanZ-1)>0.000001){results.push({s,n:rows.length,median:med,result:null,assessment:'Partial plating: classical LC not applicable'});messages.push(`${s.name}: only ${(meanZ*100).toPrecision(3)}% of the culture is represented on 5-FOA plates. The classical Lea–Coulson median equation does not itself correct for partial plating, so no mutation rate is reported. Use the optional mlemur workflow or a validated partial-plating estimator.`);return;}
+  if(nCV>.05){results.push({s,n:rows.length,median:med,result:null,assessment:'Variable final population size'});messages.push(`${s.name}: final population-size CV is ${(nCV*100).toFixed(1)}%; the single-population-size approximation is not applied.`);return;}
+  if(!(med>0)){results.push({s,n:rows.length,median:med,result:null,assessment:'Median is zero'});messages.push(`${s.name}: median mutant count is zero; the median estimator is not informative for this dataset.`);return;}
+  const r=bootstrapLeaRate(rows,meanN,meanZ);
+  const inRange=med>=2.5&&med<=60;
+  const assess=inRange?'Estimate available; check assumptions':'Outside recommended median-count range';
+  results.push({s,n:rows.length,median:med,result:r,assessment:assess});
+  if(!inRange)messages.push(`${s.name}: median 5-FOA count ${fmt(med,2)} is outside the approximate recommended Lea–Coulson range (2.5–60); treat the estimate as exploratory.`);
+ });
+ tbody.innerHTML=results.map(x=>`<tr><td>${esc(x.s.name)}</td><td>${x.n}</td><td>${x.median===null?'—':fmt(x.median,2)}</td><td>${x.result?fmtSci(x.result.rate):'—'}</td><td>${x.result&&x.result.lower!==null&&x.result.upper!==null?fmtSci(x.result.lower)+' – '+fmtSci(x.result.upper):'—'}</td><td>${esc(x.assessment)}</td></tr>`).join('')||'<tr><td colspan="6">No strains entered.</td></tr>';
+ status.textContent=messages.length?messages.join(' '):'Lea–Coulson estimates are available for the entered strains. The 95% intervals are culture-level bootstrap intervals and should be treated as approximate. Confirm the assumptions before interpreting the estimates.';
+ drawLeaGraph(results.filter(x=>x.result&&x.result.rate>0));
+ state.leaResults={};results.forEach(x=>{if(x.result)state.leaResults[x.s.id]={...x.result,n:x.n,median:x.median,assessment:x.assessment};});
+}
+function drawLeaGraph(rows){
+ const svg=document.getElementById('leaMutationRateGraph');if(!svg)return;
+ if(!rows.length){svg.innerHTML='<text x="450" y="180" text-anchor="middle" fill="#777" font-size="15">A Lea–Coulson estimate will appear when culture size and plated fraction are sufficiently similar.</text>';return;}
+ const vals=rows.flatMap(x=>[x.result.lower,x.result.rate,x.result.upper]).filter(v=>v>0&&Number.isFinite(v));
+ if(!vals.length){svg.innerHTML='<text x="450" y="180" text-anchor="middle" fill="#777">Positive estimates are required for the logarithmic axis.</text>';return;}
+ const W=900,H=360,left=95,right=35,top=30,bottom=75,plotW=W-left-right,plotH=H-top-bottom;
+ let lo=Math.floor(Math.log10(Math.min(...vals))),hi=Math.ceil(Math.log10(Math.max(...vals)));if(lo===hi)hi=lo+1;
+ const y=v=>top+(hi-Math.log10(v))/(hi-lo)*plotH;let out='';
+ for(let e=lo;e<=hi;e++){const yy=y(Math.pow(10,e));out+=`<line x1="${left}" y1="${yy}" x2="${W-right}" y2="${yy}" stroke="#e3e3e3"/><text x="${left-12}" y="${yy+4}" text-anchor="end" font-size="11" fill="#555">10^${e}</text>`;}
+ const step=plotW/rows.length;rows.forEach((x,i)=>{const xx=left+step*(i+.5),r=x.result;if(r.lower>0&&r.upper>0)out+=`<line x1="${xx}" y1="${y(r.lower)}" x2="${xx}" y2="${y(r.upper)}" stroke="#52705d" stroke-width="3"/><line x1="${xx-8}" y1="${y(r.lower)}" x2="${xx+8}" y2="${y(r.lower)}" stroke="#52705d"/><line x1="${xx-8}" y1="${y(r.upper)}" x2="${xx+8}" y2="${y(r.upper)}" stroke="#52705d"/>`;out+=`<circle cx="${xx}" cy="${y(r.rate)}" r="6" fill="#78AA8A" stroke="#355744"/><text x="${xx}" y="${H-38}" text-anchor="middle" font-size="12" fill="#333">${esc(x.s.name).slice(0,18)}</text>`;});
+ out+=`<text x="${W/2}" y="${H-10}" text-anchor="middle" font-size="12" fill="#555">Strain</text><text transform="translate(20 ${H/2}) rotate(-90)" text-anchor="middle" font-size="12" fill="#555">Mutation rate per cell division (log scale)</text>`;svg.innerHTML=out;
+}
+
+function renderMlemurInputs(){
+  const box=document.getElementById('mlemurInputs'); if(!box)return;
+  box.innerHTML=state.strains.map(s=>{const r=state.mlemurResults[s.id]||{};return `<div class="comparison"><div class="comparison-title">${esc(s.name)}</div><div class="input-grid"><div class="field"><label>Mutation rate (per cell division)</label><input type="number" min="0" step="any" data-mle="rate" data-id="${s.id}" value="${r.rate??''}" placeholder="e.g. 1e-7"></div><div class="field"><label>95% CI lower</label><input type="number" min="0" step="any" data-mle="lower" data-id="${s.id}" value="${r.lower??''}" placeholder="Lower confidence limit"></div><div class="field"><label>95% CI upper</label><input type="number" min="0" step="any" data-mle="upper" data-id="${s.id}" value="${r.upper??''}" placeholder="Upper confidence limit"></div><div class="field"><label>Model / notes</label><input type="text" data-mle="model" data-id="${s.id}" value="${esc(r.model||'')}" placeholder="e.g. mlemur model selected"></div></div></div>`}).join('');
+  box.querySelectorAll('[data-mle]').forEach(el=>el.addEventListener('input',()=>{const id=el.dataset.id;state.mlemurResults[id]=state.mlemurResults[id]||{};const k=el.dataset.mle;state.mlemurResults[id][k]=k==='model'?el.value:(el.value===''?null:Number(el.value));renderMlemurResults();}));
+}
+function csvCell(v){return '"'+String(v??'').replace(/"/g,'""')+'"';}
+function downloadMlemurTemplate(){
+ const rows=[['Strain','Mutation_rate','CI_lower','CI_upper','Model_notes']];
+ state.strains.forEach(s=>rows.push([s.name,'','','','mlemur model/settings used']));
+ const blob=new Blob([rows.map(r=>r.map(csvCell).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8;'});
+ const a=document.createElement('a');const url=URL.createObjectURL(blob);a.href=url;a.download='mlemur-results-template.csv';a.click();URL.revokeObjectURL(url);
+ document.getElementById('mlemurImportStatus').textContent='Template downloaded. Fill in one row per strain, save as CSV, then import it here.';
+}
+function parseCSV(text){
+ const rows=[];let row=[],cell='',quoted=false;
+ for(let i=0;i<text.length;i++){
+  const ch=text[i];
+  if(quoted){if(ch==='"'&&text[i+1]==='"'){cell+='"';i++;}else if(ch==='"'){quoted=false;}else{cell+=ch;}}
+  else if(ch==='"'){quoted=true;}else if(ch===','){row.push(cell);cell='';}else if(ch==='\n'){row.push(cell.replace(/\r$/,''));rows.push(row);row=[];cell='';}else{cell+=ch;}
+ }
+ if(cell.length||row.length){row.push(cell.replace(/\r$/,''));rows.push(row);}
+ return rows.filter(r=>r.some(v=>String(v).trim()!==''));
+}
+function importMlemurResultsFile(file){
+ const status=document.getElementById('mlemurImportStatus');
+ const reader=new FileReader();
+ reader.onload=()=>{
+  try{
+   const rows=parseCSV(String(reader.result||''));if(rows.length<2)throw new Error('The CSV must contain a header row and at least one result row.');
+   const norm=x=>String(x||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+   const headers=rows[0].map(norm);
+   const find=(names)=>headers.findIndex(h=>names.includes(h));
+   const iName=find(['strain','strainname','sample','sampleid']);
+   const iRate=find(['mutationrate','rate','mrate','mutrate']);
+   const iLow=find(['cilower','lowerci','ci95lower','lower95ci','lowerconfidenceinterval','lower']);
+   const iHigh=find(['ciupper','upperci','ci95upper','upper95ci','upperconfidenceinterval','upper']);
+   const iModel=find(['modelnotes','model','notes','modelsettings']);
+   if(iName<0||iRate<0||iLow<0||iHigh<0)throw new Error('Required columns not found. Use the template headers: Strain, Mutation_rate, CI_lower, CI_upper, Model_notes.');
+   let imported=0,unmatched=[];
+   rows.slice(1).forEach(r=>{
+    const name=String(r[iName]||'').trim();if(!name)return;
+    const strain=state.strains.find(s=>s.name.trim().toLowerCase()===name.toLowerCase());
+    if(!strain){unmatched.push(name);return;}
+    const parseNum=v=>{const n=Number(String(v??'').trim());return String(v??'').trim()===''||!Number.isFinite(n)?null:n;};
+    const rate=parseNum(r[iRate]),lower=parseNum(r[iLow]),upper=parseNum(r[iHigh]);
+    if(rate===null||lower===null||upper===null||rate<0||lower<0||upper<lower)throw new Error('Invalid mutation-rate value or confidence interval for strain "'+name+'".');
+    state.mlemurResults[strain.id]={rate,lower,upper,model:iModel>=0?String(r[iModel]||'').trim():'Imported from CSV'};imported++;
+   });
+   if(!imported)throw new Error('No rows matched the strain names currently in the calculator. Strain names must match exactly.');
+   renderMlemurInputs();renderMlemurResults();
+   status.textContent=`Imported results for ${imported} strain(s).`+(unmatched.length?' Unmatched rows: '+unmatched.join(', ')+'.':'');
+  }catch(e){status.textContent='Could not import results: '+e.message;}
+ };
+ reader.onerror=()=>{status.textContent='The selected CSV file could not be read.';};
+ reader.readAsText(file);
+}
+document.getElementById('downloadMlemurTemplate').addEventListener('click',downloadMlemurTemplate);
+document.getElementById('mlemurResultsFile').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(f)importMlemurResultsFile(f);e.target.value='';});
+function renderMlemurResults(){
+  const tbody=document.querySelector('#mlemurResultsTable tbody'); if(!tbody)return;
+  const rows=state.strains.map(s=>({s,r:state.mlemurResults[s.id]||{}}));
+  const valid=rows.filter(x=>Number.isFinite(x.r.rate)&&Number.isFinite(x.r.lower)&&Number.isFinite(x.r.upper)&&x.r.rate>=0&&x.r.lower>=0&&x.r.upper>=x.r.lower);
+  tbody.innerHTML=rows.map(({s,r})=>`<tr><td>${esc(s.name)}</td><td>${Math.min(s.yes.length,s.foa.length)}</td><td>${Number.isFinite(r.rate)?fmtSci(r.rate):'—'}</td><td>${Number.isFinite(r.lower)?fmtSci(r.lower):'—'}</td><td>${Number.isFinite(r.upper)?fmtSci(r.upper):'—'}</td><td>${esc(r.model||'')}</td></tr>`).join('')||'<tr><td colspan="6">No strains entered.</td></tr>';
+  drawMlemurGraph(valid);
+}
+function drawMlemurGraph(rows){
+ const svg=document.getElementById('mutationRateGraph');if(!svg)return;
+ if(!rows.length){svg.innerHTML='<text x="450" y="180" text-anchor="middle" fill="#777" font-size="15">Enter mlemur estimates and 95% confidence intervals to display the graph.</text>';return;}
+ const W=900,H=360,left=90,right=35,top=35,bottom=75,plotW=W-left-right,plotH=H-top-bottom;
+ const vals=rows.flatMap(x=>[x.r.lower,x.r.rate,x.r.upper]).filter(v=>v>0);if(!vals.length){svg.innerHTML='<text x="450" y="180" text-anchor="middle" fill="#777">Positive estimates are required for the logarithmic axis.</text>';return;}
+ const min=Math.pow(10,Math.floor(Math.log10(Math.min(...vals)))),max=Math.pow(10,Math.ceil(Math.log10(Math.max(...vals))));
+ const lo=Math.log10(min),hi=Math.log10(max===min?min*10:max);
+ const y=v=>top+(hi-Math.log10(v))/((hi-lo)||1)*plotH;
+ let out=`<rect x="${left}" y="${top}" width="${plotW}" height="${plotH}" fill="#fff"/>`;
+ for(let e=Math.floor(lo);e<=Math.ceil(hi);e++){const yy=y(Math.pow(10,e));out+=`<line x1="${left}" y1="${yy}" x2="${W-right}" y2="${yy}" stroke="#e3e3e3"/><text x="${left-12}" y="${yy+4}" text-anchor="end" font-size="11" fill="#555">10^${e}</text>`;}
+ const step=plotW/rows.length;
+ rows.forEach((x,i)=>{const xx=left+step*(i+.5),r=x.r;out+=`<line x1="${xx}" y1="${y(r.lower)}" x2="${xx}" y2="${y(r.upper)}" stroke="#52705d" stroke-width="3"/><line x1="${xx-8}" y1="${y(r.lower)}" x2="${xx+8}" y2="${y(r.lower)}" stroke="#52705d" stroke-width="2"/><line x1="${xx-8}" y1="${y(r.upper)}" x2="${xx+8}" y2="${y(r.upper)}" stroke="#52705d" stroke-width="2"/><circle cx="${xx}" cy="${y(r.rate)}" r="6" fill="#78AA8A" stroke="#355744"/><text x="${xx}" y="${H-38}" text-anchor="middle" font-size="12" fill="#333">${esc(x.s.name).slice(0,18)}</text>`;});
+ out+=`<text x="${W/2}" y="${H-10}" text-anchor="middle" font-size="12" fill="#555">Strain</text><text transform="translate(20 ${H/2}) rotate(-90)" text-anchor="middle" font-size="12" fill="#555">Mutation rate (per cell division; log scale)</text>`;svg.innerHTML=out;
+}
+function exportMlemurCSV(){
+ const lines=[['Strain','Culture','YES colonies','5FOA colonies','Viable concentration (cells/mL)','Culture volume (mL)','YES dilution factor','YES plating volume (uL)','5FOA dilution factor','5FOA plating volume (uL)','YES target cells','5FOA target cells'].join(',')];
+ state.strains.forEach(s=>{const n=Math.max(s.yes.length,s.foa.length,(s.imported||[]).length);for(let i=0;i<n;i++){const x=s.imported?.[i]||{};const vals=[s.name,i+1,s.yes[i]??'',s.foa[i]??'',s.concentration?.[i]??x.concentration??'',s.cultureVolumeMl||20,x.yes?.dilutionFactor??'',x.yes?.platingVolumeUl??'',x.foa?.dilutionFactor??'',x.foa?.platingVolumeUl??'',s.yesPlated?.[i]??100,s.foaPlated?.[i]??100000];lines.push(vals.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','));}});
+ const blob=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ura4-mlemur-input-data.csv';a.click();URL.revokeObjectURL(a.href);document.getElementById('mlemurExportStatus').textContent='CSV downloaded. Use it as a per-culture data reference when entering the assay in mlemur; it is not a native mlemur project file.';
+}
+document.getElementById('downloadMlemurData').addEventListener('click',exportMlemurCSV);
+document.getElementById('openMlemur').addEventListener('click',()=>window.open('https://github.com/krystianll/mlemur','_blank','noopener'));
+
+function importPlatingData(){
+  const status=document.getElementById('importStatus');
+  try{
+    const raw=localStorage.getItem('pombeUra4PlatingTransfer');
+    if(!raw){status.textContent='No transferred plating data found in this browser. Open the plating calculator, calculate the results, and choose “Send to ura4-loss calculator” first.';return;}
+    const data=JSON.parse(raw);
+    if(!data.strains?.length) throw new Error('The transfer contains no strain data.');
+    state.strains=[];
+    data.strains.forEach((item)=>{
+      const s=newStrain();s.name=item.name||'Imported strain';
+      s.yes=Array(12).fill(null);s.foa=Array(12).fill(null);
+      s.imported=item.colonies||[];s.concentration=(item.colonies||[]).map(x=>x.concentration);s.cultureVolumeMl=Number(data.cultureVolumeMl)||20;
+      s.yesPlated=(item.colonies||[]).map(x=>x.yes?.target||100);
+      s.foaPlated=(item.colonies||[]).map(x=>x.foa?.target||100000);
+      state.strains.push(s);
+    });
+    renderAll();
+    status.textContent=`Imported ${data.strains.length} strain(s) and ${data.strains.reduce((n,x)=>n+(x.colonies||[]).length,0)} culture records. Enter YES and 5-FOA colony counts below; the imported concentration and plating plan are retained for review.`;
+  }catch(e){status.textContent='Could not import the plating data: '+e.message;}
+}
+document.getElementById('importPlatingButton').addEventListener('click',importPlatingData);
+
 document.getElementById("downloadButton").addEventListener("click",async()=>{
   if(typeof XLSX==="undefined"){
     alert("The Excel export library could not be loaded. Please check your internet connection and try again.");
@@ -641,12 +895,23 @@ document.getElementById("downloadButton").addEventListener("click",async()=>{
   wsChar["!cols"]=[{wch:22},{wch:20},{wch:20},{wch:12},{wch:15},{wch:17}];
   XLSX.utils.book_append_sheet(wb,wsChar,"Eviction conversion");
 
+  const leaRows=[["Strain","Independent cultures","Median 5-FOA colonies","Lea-Coulson mutation rate per cell division","Approx. bootstrap 95% CI lower","Approx. bootstrap 95% CI upper","Assessment"]];
+  state.strains.forEach(s=>{const r=state.leaResults[s.id]||{};leaRows.push([s.name,r.n??Math.min(s.yes.length,s.foa.length),r.median??null,r.rate??null,r.lower??null,r.upper??null,r.assessment||"Not estimated / assumptions not met"]);});
+  const wsLea=XLSX.utils.aoa_to_sheet(leaRows);wsLea["!cols"]=[{wch:22},{wch:20},{wch:22},{wch:38},{wch:28},{wch:28},{wch:45}];XLSX.utils.book_append_sheet(wb,wsLea,"Mutation rate (Lea-Coulson)");
+
+  const mleRows=[["Strain","Independent cultures","Mutation rate per cell division","95% CI lower","95% CI upper","Model / notes"]];
+  state.strains.forEach(s=>{const r=state.mlemurResults[s.id]||{};mleRows.push([s.name,Math.min(s.yes.length,s.foa.length),r.rate??null,r.lower??null,r.upper??null,r.model||""]);});
+  const wsMle=XLSX.utils.aoa_to_sheet(mleRows);wsMle["!cols"]=[{wch:22},{wch:20},{wch:30},{wch:18},{wch:18},{wch:35}];XLSX.utils.book_append_sheet(wb,wsMle,"Mutation rate (mlemur)");
+  const mleGraphRows=[["Strain","Mutation rate","95% CI lower","95% CI upper"]];state.strains.forEach(s=>{const r=state.mlemurResults[s.id]||{};mleGraphRows.push([s.name,r.rate??null,r.lower??null,r.upper??null]);});const wsMleGraph=XLSX.utils.aoa_to_sheet(mleGraphRows);XLSX.utils.book_append_sheet(wb,wsMleGraph,"Mutation-rate graph data");
   XLSX.writeFile(wb,"ura4-loss-frequency-results.xlsx");
 });
 
 // Start with one strain. No hidden dependency on any other section.
 state.strains.push(newStrain());
 renderAll();
+renderMlemurInputs();
+renderMlemurResults();
+renderLeaCoulsonResults();
 
 })();
 </script>
